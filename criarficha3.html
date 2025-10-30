@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supernova RPG - Distribuir Atributos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajaxlers/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5a52d5;
+            --secondary: #FF6584;
+            --dark: #2A2D3E;
+            --darker: #1F2232;
+            --light: #F5F5F7;
+            --success: #4CAF50;
+            --error: #f44336;
+            --warning: #ff9800;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .back-btn {
+            background: rgba(108, 99, 255, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .creation-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        /* Sistema de PP */
+        .pp-counter {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+
+        .pp-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+
+        .pp-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Grade de Atributos Compacta */
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .attribute-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 140px;
+        }
+
+        .attribute-card:hover {
+            border-color: var(--primary);
+        }
+
+        .attribute-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .attribute-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--light);
+            margin: 10px 0;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .attribute-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .attr-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .attr-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+        }
+
+        .attr-btn.decrease {
+            background: var(--secondary);
+        }
+
+        /* Informações Compactas */
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .info-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+
+        /* Ações */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid var(--success);
+            color: #a5d6a7;
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid var(--error);
+            color: #ef9a9a;
+        }
+
+        @media (max-width: 768px) {
+            .attributes-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .attribute-card {
+                padding: 15px;
+                min-height: 130px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .attributes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .attribute-card {
+                min-height: 120px;
+            }
+            
+            body {
+                padding: 15px;
+            }
+            
+            .creation-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                <h1>SUPERNOVA RPG</h1>
+            </div>
+            <a href="fichas.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </header>
+
+        <div class="page-title">
+            <h2>Distribuir Atributos</h2>
+            <p>Ajuste os atributos do seu herói</p>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="creation-card">
+            <!-- Contador de PP -->
+            <div class="pp-counter">
+                <div class="pp-label">NÍVEL DE PODER DA FICHA</div>
+                <div class="pp-value" id="pp-value">0</div>
+                <div class="pp-label">Cada ponto de atributo adiciona 2 PP ao total</div>
+            </div>
+
+            <!-- Informações -->
+            <div class="info-box">
+                <div class="info-title">Sistema de Atributos:</div>
+                <div class="info-text">
+                    <p>• <strong>Aumentar atributo:</strong> +1 no atributo = +2 PP no total</p>
+                    <p>• <strong>Diminuir atributo:</strong> -1 no atributo = -2 PP no total</p>
+                    <p>• Atributos podem ficar negativos</p>
+                    <p>• PP representa o nível de poder total da ficha</p>
+                </div>
+            </div>
+
+            <!-- Grade de Atributos -->
+            <div class="attributes-grid" id="attributes-grid">
+                <!-- Atributos serão preenchidos via JavaScript -->
+            </div>
+
+            <div class="actions">
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="back-to-arquetipo">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <button class="btn btn-primary" id="avancar-ficha">
+                        Avançar para Vantagens <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzdrAtJoBUONdyHsEPrzWDTH9FMg1xW78",
+            authDomain: "supernova-372bf.firebaseapp.com",
+            projectId: "supernova-372bf",
+            storageBucket: "supernova-372bf.firebasestorage.app",
+            messagingSenderId: "917055386010",
+            appId: "1:917055386010:web:3f27d9173e3dd7fbdf8a23"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Dados dos Atributos
+        const atributosData = {
+            'forca': 'Força',
+            'agilidade': 'Agilidade',
+            'luta': 'Luta',
+            'prontidao': 'Prontidão',
+            'vigor': 'Vigor',
+            'destreza': 'Destreza',
+            'intelecto': 'Intelecto',
+            'presenca': 'Presença'
+        };
+
+        // Variáveis globais
+        let currentUser = null;
+        let currentFichaId = null;
+        let currentSlot = null;
+        let ppTotal = 0;
+        let atributosAtuais = {};
+        let modificadorIdade = 0;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            setupNavigation();
+            
+            // Verificar autenticação e parâmetros
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    currentUser = user;
+                    const urlParams = new URLSearchParams(window.location.search);
+                    currentFichaId = urlParams.get('fichaId');
+                    currentSlot = urlParams.get('slot');
+                    
+                    if (!currentFichaId || !currentSlot) {
+                        showMessage('Parâmetros inválidos. Redirecionando...', 'error');
+                        setTimeout(() => {
+                            window.location.href = 'fichas.html';
+                        }, 2000);
+                    } else {
+                        carregarDadosFicha();
+                    }
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+
+        // Carregar dados da ficha do Firebase
+        async function carregarDadosFicha() {
+            try {
+                const fichaDoc = await db.collection('fichas').doc(currentFichaId).get();
+                
+                if (fichaDoc.exists) {
+                    const fichaData = fichaDoc.data();
+                    
+                    // Obter modificador de idade
+                    modificadorIdade = fichaData.modificadorIdade || 0;
+                    
+                    // Inicializar atributos com valores base + modificador de idade
+                    for (const atributo in atributosData) {
+                        atributosAtuais[atributo] = modificadorIdade;
+                    }
+                    
+                    // Se já existem atributos salvos, usar eles
+                    if (fichaData.atributos) {
+                        atributosAtuais = { ...fichaData.atributos };
+                    }
+                    
+                    // Calcular PP total baseado nos atributos atuais
+                    calcularPPTotal();
+                    
+                    // Atualizar interface
+                    atualizarInterfaceAtributos();
+                    atualizarContadorPP();
+                } else {
+                    showMessage('Ficha não encontrada. Redirecionando...', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'fichas.html';
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar ficha:', error);
+                showMessage('Erro ao carregar dados da ficha.', 'error');
+            }
+        }
+
+        // Calcular PP total baseado nos atributos
+        function calcularPPTotal() {
+            ppTotal = 0;
+            for (const atributo in atributosAtuais) {
+                // Cada ponto acima do modificador de idade adiciona 2 PP
+                ppTotal += (atributosAtuais[atributo] - modificadorIdade) * 2;
+            }
+        }
+
+        // Atualizar interface dos atributos
+        function atualizarInterfaceAtributos() {
+            const attributesGrid = document.getElementById('attributes-grid');
+            attributesGrid.innerHTML = '';
+            
+            for (const [key, nome] of Object.entries(atributosData)) {
+                const valorAtual = atributosAtuais[key];
+                
+                const attributeCard = document.createElement('div');
+                attributeCard.className = 'attribute-card';
+                attributeCard.innerHTML = `
+                    <div class="attribute-name">${nome}</div>
+                    <div class="attribute-value">${valorAtual}</div>
+                    <div class="attribute-controls">
+                        <button class="attr-btn decrease" data-attribute="${key}">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button class="attr-btn increase" data-attribute="${key}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                `;
+                
+                attributesGrid.appendChild(attributeCard);
+            }
+            
+            // Adicionar event listeners aos botões
+            document.querySelectorAll('.attr-btn.increase').forEach(btn => {
+                btn.addEventListener('click', () => aumentarAtributo(btn.getAttribute('data-attribute')));
+            });
+            
+            document.querySelectorAll('.attr-btn.decrease').forEach(btn => {
+                btn.addEventListener('click', () => diminuirAtributo(btn.getAttribute('data-attribute')));
+            });
+        }
+
+        // Atualizar contador de PP
+        function atualizarContadorPP() {
+            document.getElementById('pp-value').textContent = ppTotal;
+        }
+
+        // Aumentar atributo
+        function aumentarAtributo(atributo) {
+            atributosAtuais[atributo]++;
+            ppTotal += 2; // Cada ponto de atributo adiciona 2 PP
+            atualizarInterfaceAtributos();
+            atualizarContadorPP();
+        }
+
+        // Diminuir atributo
+        function diminuirAtributo(atributo) {
+            atributosAtuais[atributo]--;
+            ppTotal -= 2; // Cada ponto de atributo removido subtrai 2 PP
+            atualizarInterfaceAtributos();
+            atualizarContadorPP();
+        }
+
+        // Navegação
+        function setupNavigation() {
+            document.getElementById('back-to-arquetipo').addEventListener('click', () => {
+                window.location.href = `criarficha2.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
+            });
+            
+            document.getElementById('avancar-ficha').addEventListener('click', saveAndContinue);
+        }
+
+        // Salvar e continuar
+        async function saveAndContinue() {
+            try {
+                const avancarBtn = document.getElementById('avancar-ficha');
+                avancarBtn.disabled = true;
+                avancarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+                // Preparar dados para atualização
+                const updateData = {
+                    atributos: atributosAtuais,
+                    pp: ppTotal,
+                    etapaCriacao: 3,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Atualizar a ficha no Firebase
+                await db.collection('fichas').doc(currentFichaId).update(updateData);
+
+                showMessage('Atributos salvos com sucesso! Avançando...', 'success');
+
+                // Redirecionar para próxima etapa
+                setTimeout(() => {
+                    window.location.href = `criarficha4.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
+                }, 2000);
+
+            } catch (error) {
+                console.error('Erro ao salvar atributos:', error);
+                showMessage('Erro ao salvar atributos. Tente novamente.', 'error');
+                
+                const avancarBtn = document.getElementById('avancar-ficha');
+                avancarBtn.disabled = false;
+                avancarBtn.innerHTML = 'Avançar para Próxima Ficha <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        // Mostrar mensagem
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
