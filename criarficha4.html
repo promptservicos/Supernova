@@ -323,6 +323,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .selected-item:hover {
+            background: rgba(255, 101, 132, 0.3);
+            border-color: var(--secondary);
+            transform: translateY(-2px);
         }
 
         .selected-item .graduation {
@@ -500,6 +509,7 @@
                     <p>• <strong>Vantagens com graduação:</strong> Cada nível adicional também adiciona +1 PP</p>
                     <p>• Clique na vantagem para selecionar/deselecionar</p>
                     <p>• Use os controles +/- para ajustar a graduação (apenas em vantagens que permitem)</p>
+                    <p>• <strong>Dica:</strong> Clique nas vantagens selecionadas abaixo para removê-las rapidamente</p>
                 </div>
             </div>
 
@@ -550,7 +560,7 @@
 
             <!-- Vantagens Selecionadas -->
             <div class="selected-advantages" id="selected-advantages" style="display: none;">
-                <div class="selected-title">Vantagens Selecionadas</div>
+                <div class="selected-title">Vantagens Selecionadas <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">(clique para remover)</span></div>
                 <div class="selected-list" id="selected-list">
                     <!-- Vantagens selecionadas aparecerão aqui -->
                 </div>
@@ -591,6 +601,7 @@
         let currentSlot = null;
         let ppTotal = 0;
         let vantagensSelecionadas = {};
+        let vantagensGraduacao = {};
         let todasVantagens = [];
 
         // Inicialização
@@ -645,15 +656,24 @@
                 // Carregar PP total
                 ppTotal = fichaData.pp || 0;
                 
-                // Carregar vantagens selecionadas
+                // Carregar vantagens selecionadas (sistema antigo - para compatibilidade)
                 if (fichaData.vantagens && typeof fichaData.vantagens === 'object') {
                     vantagensSelecionadas = { ...fichaData.vantagens };
                 }
                 
+                // Carregar vantagens com graduação (novo sistema)
+                if (fichaData.vantagensGraduacao && typeof fichaData.vantagensGraduacao === 'object') {
+                    vantagensGraduacao = { ...fichaData.vantagensGraduacao };
+                }
+                
                 console.log('Vantagens selecionadas:', vantagensSelecionadas);
+                console.log('Vantagens com graduação:', vantagensGraduacao);
                 
                 // Carregar todas as vantagens da coleção
                 await carregarTodasVantagens();
+                
+                // Migrar dados antigos se necessário
+                await migrarParaNovoSistema();
                 
                 // Atualizar interface
                 atualizarContadorPP();
@@ -665,6 +685,51 @@
             }
         }
 
+        // Migrar dados do sistema antigo para o novo
+        async function migrarParaNovoSistema() {
+            console.log('Verificando migração de dados...');
+            
+            let precisaMigrar = false;
+            const vantagensParaMigrar = {};
+            
+            // Verificar se há vantagens no sistema antigo que precisam ser migradas
+            for (const [codigo, valor] of Object.entries(vantagensSelecionadas)) {
+                const vantagem = todasVantagens.find(v => v.id === codigo);
+                if (vantagem) {
+                    const temGraduacao = vantagem.graduacao === true || 
+                                       vantagem.graduacao === 'true' || 
+                                       vantagem.graduacao === 1;
+                    
+                    if (temGraduacao && valor > 0) {
+                        // Esta vantagem deve estar em vantagensGraduacao
+                        vantagensParaMigrar[codigo] = valor;
+                        precisaMigrar = true;
+                    } else if (!temGraduacao && valor === 0) {
+                        // Está correto no sistema antigo
+                        continue;
+                    } else {
+                        // Dados inconsistentes - remover
+                        delete vantagensSelecionadas[codigo];
+                        precisaMigrar = true;
+                    }
+                }
+            }
+            
+            if (precisaMigrar) {
+                console.log('Migrando dados para novo sistema...', vantagensParaMigrar);
+                
+                // Mover vantagens para o sistema correto
+                for (const [codigo, valor] of Object.entries(vantagensParaMigrar)) {
+                    vantagensGraduacao[codigo] = valor;
+                    delete vantagensSelecionadas[codigo];
+                }
+                
+                // Salvar a migração
+                await salvarEstruturaCorreta();
+                console.log('Migração concluída com sucesso!');
+            }
+        }
+
         // Carregar todas as vantagens da coleção
         async function carregarTodasVantagens() {
             try {
@@ -673,9 +738,11 @@
                 
                 todasVantagens = [];
                 vantagensSnapshot.forEach(doc => {
+                    const vantagemData = doc.data();
+                    
                     todasVantagens.push({
                         id: doc.id,
-                        ...doc.data()
+                        ...vantagemData
                     });
                 });
                 
@@ -715,16 +782,28 @@
                     item.setAttribute('data-codigo', vantagem.id);
                     item.setAttribute('data-categoria', vantagem.categoria);
                     
-                    const graduacao = vantagensSelecionadas[vantagem.id] || 0;
-                    const estaSelecionada = vantagensSelecionadas[vantagem.id] !== undefined;
-                    const temGraduacao = vantagem.graduacao === true; // VERIFICAÇÃO CORRIGIDA
+                    const temGraduacao = vantagem.graduacao === true || 
+                                       vantagem.graduacao === 'true' || 
+                                       vantagem.graduacao === 1;
+                    
+                    // Determinar se está selecionada e qual o valor
+                    let estaSelecionada = false;
+                    let graduacao = 0;
+                    
+                    if (temGraduacao) {
+                        estaSelecionada = vantagensGraduacao[vantagem.id] !== undefined;
+                        graduacao = vantagensGraduacao[vantagem.id] || 0;
+                    } else {
+                        estaSelecionada = vantagensSelecionadas[vantagem.id] !== undefined;
+                        graduacao = 0;
+                    }
                     
                     if (estaSelecionada) {
                         item.classList.add('selected');
                     }
                     
                     let controlsHTML = '';
-                    if (temGraduacao) { // SÓ MOSTRA CONTROLES SE graduacao FOR true
+                    if (temGraduacao) {
                         controlsHTML = `
                             <div class="graduation-controls">
                                 <button class="graduation-btn decrease" data-codigo="${vantagem.id}">
@@ -756,15 +835,22 @@
                     
                     // Event listeners para controles de graduação (apenas se tiver graduação)
                     if (temGraduacao) {
-                        item.querySelector('.graduation-btn.increase').addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            aumentarGraduacao(vantagem.id);
-                        });
+                        const increaseBtn = item.querySelector('.graduation-btn.increase');
+                        const decreaseBtn = item.querySelector('.graduation-btn.decrease');
                         
-                        item.querySelector('.graduation-btn.decrease').addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            diminuirGraduacao(vantagem.id);
-                        });
+                        if (increaseBtn) {
+                            increaseBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                aumentarGraduacao(vantagem.id);
+                            });
+                        }
+                        
+                        if (decreaseBtn) {
+                            decreaseBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                diminuirGraduacao(vantagem.id);
+                            });
+                        }
                     }
                     
                     lista.appendChild(item);
@@ -776,22 +862,28 @@
         function toggleVantagem(codigo, temGraduacao) {
             console.log(`Toggle vantagem: ${codigo}, graduação: ${temGraduacao}`);
             
-            if (vantagensSelecionadas[codigo] !== undefined) {
-                // Remover vantagem
-                if (temGraduacao) {
-                    ppTotal -= vantagensSelecionadas[codigo]; // Remove PP das graduações
+            if (temGraduacao) {
+                // Vantagem COM graduação
+                if (vantagensGraduacao[codigo] !== undefined) {
+                    // Remover vantagem com graduação
+                    const graduacaoAtual = vantagensGraduacao[codigo];
+                    ppTotal -= (1 + (graduacaoAtual - 1)); // Remove PP base + graduações
+                    delete vantagensGraduacao[codigo];
                 } else {
-                    ppTotal -= 1; // Remove PP base
+                    // Adicionar vantagem com graduação
+                    vantagensGraduacao[codigo] = 1; // Começa com graduação 1
+                    ppTotal += 1; // PP da primeira graduação (inclui PP base)
                 }
-                delete vantagensSelecionadas[codigo];
             } else {
-                // Adicionar vantagem
-                if (temGraduacao) {
-                    vantagensSelecionadas[codigo] = 1;
-                    ppTotal += 1; // PP da primeira graduação
+                // Vantagem SEM graduação
+                if (vantagensSelecionadas[codigo] !== undefined) {
+                    // Remover vantagem sem graduação
+                    ppTotal -= 1;
+                    delete vantagensSelecionadas[codigo];
                 } else {
-                    vantagensSelecionadas[codigo] = 0;
-                    ppTotal += 1; // PP base
+                    // Adicionar vantagem sem graduação
+                    vantagensSelecionadas[codigo] = 0; // 0 indica sem graduação
+                    ppTotal += 1;
                 }
             }
             
@@ -801,8 +893,8 @@
 
         // Aumentar graduação
         function aumentarGraduacao(codigo) {
-            if (vantagensSelecionadas[codigo] !== undefined) {
-                vantagensSelecionadas[codigo]++;
+            if (vantagensGraduacao[codigo] !== undefined) {
+                vantagensGraduacao[codigo]++;
                 ppTotal += 1; // Cada graduação adicional adiciona 1 PP
                 atualizarInterface();
                 salvarProgresso();
@@ -811,17 +903,19 @@
 
         // Diminuir graduação
         function diminuirGraduacao(codigo) {
-            if (vantagensSelecionadas[codigo] > 1) {
-                vantagensSelecionadas[codigo]--;
-                ppTotal -= 1; // Cada graduação removida subtrai 1 PP
-                atualizarInterface();
-                salvarProgresso();
-            } else if (vantagensSelecionadas[codigo] === 1) {
-                // Remove a vantagem se chegar a 0
-                delete vantagensSelecionadas[codigo];
-                ppTotal -= 1; // Remove PP da graduação
-                atualizarInterface();
-                salvarProgresso();
+            if (vantagensGraduacao[codigo] !== undefined) {
+                if (vantagensGraduacao[codigo] > 1) {
+                    vantagensGraduacao[codigo]--;
+                    ppTotal -= 1; // Cada graduação removida subtrai 1 PP
+                    atualizarInterface();
+                    salvarProgresso();
+                } else if (vantagensGraduacao[codigo] === 1) {
+                    // Remove a vantagem se chegar a 0
+                    delete vantagensGraduacao[codigo];
+                    ppTotal -= 1; // Remove PP da primeira graduação
+                    atualizarInterface();
+                    salvarProgresso();
+                }
             }
         }
 
@@ -829,7 +923,7 @@
         function atualizarInterface() {
             atualizarContadorPP();
             atualizarVantagensSelecionadas();
-            renderizarVantagens(); // Re-renderiza para atualizar estados visuais
+            renderizarVantagens();
         }
 
         // Atualizar lista de vantagens selecionadas
@@ -838,36 +932,100 @@
             const selectedList = document.getElementById('selected-list');
             selectedList.innerHTML = '';
             
-            if (Object.keys(vantagensSelecionadas).length === 0) {
+            const totalVantagens = Object.keys(vantagensSelecionadas).length + Object.keys(vantagensGraduacao).length;
+            
+            if (totalVantagens === 0) {
                 selectedContainer.style.display = 'none';
                 return;
             }
             
             selectedContainer.style.display = 'block';
             
-            for (const [codigo, graduacao] of Object.entries(vantagensSelecionadas)) {
+            // Mostrar vantagens SEM graduação
+            for (const [codigo] of Object.entries(vantagensSelecionadas)) {
                 const vantagem = todasVantagens.find(v => v.id === codigo);
                 const nome = vantagem ? vantagem.nome : codigo;
-                const temGraduacao = vantagem ? vantagem.graduacao === true : false;
                 
                 const item = document.createElement('div');
                 item.className = 'selected-item';
+                item.textContent = nome;
+                item.setAttribute('data-codigo', codigo);
+                item.setAttribute('data-tipo', 'sem-graduacao');
                 
-                if (temGraduacao && graduacao > 0) {
-                    item.innerHTML = `
-                        ${nome} <span class="graduation">${graduacao}</span>
-                    `;
-                } else {
-                    item.textContent = nome;
-                }
+                // Adicionar evento de clique para remover
+                item.addEventListener('click', () => {
+                    removerVantagemSelecionada(codigo, false);
+                });
+                
+                selectedList.appendChild(item);
+            }
+            
+            // Mostrar vantagens COM graduação
+            for (const [codigo, graduacao] of Object.entries(vantagensGraduacao)) {
+                const vantagem = todasVantagens.find(v => v.id === codigo);
+                const nome = vantagem ? vantagem.nome : codigo;
+                
+                const item = document.createElement('div');
+                item.className = 'selected-item';
+                item.innerHTML = `${nome} <span class="graduation">${graduacao}</span>`;
+                item.setAttribute('data-codigo', codigo);
+                item.setAttribute('data-tipo', 'com-graduacao');
+                
+                // Adicionar evento de clique para remover
+                item.addEventListener('click', () => {
+                    removerVantagemSelecionada(codigo, true);
+                });
                 
                 selectedList.appendChild(item);
             }
         }
 
+        // Remover vantagem clicando na lista de selecionadas
+        function removerVantagemSelecionada(codigo, temGraduacao) {
+            console.log(`Removendo vantagem da lista: ${codigo}, graduação: ${temGraduacao}`);
+            
+            if (temGraduacao) {
+                // Remover vantagem COM graduação
+                const graduacaoAtual = vantagensGraduacao[codigo];
+                ppTotal -= (1 + (graduacaoAtual - 1)); // Remove PP base + graduações
+                delete vantagensGraduacao[codigo];
+            } else {
+                // Remover vantagem SEM graduação
+                ppTotal -= 1;
+                delete vantagensSelecionadas[codigo];
+            }
+            
+            atualizarInterface();
+            salvarProgresso();
+        }
+
         // Atualizar contador de PP
         function atualizarContadorPP() {
             document.getElementById('pp-value').textContent = ppTotal;
+        }
+
+        // Salvar com estrutura correta
+        async function salvarEstruturaCorreta() {
+            const updateData = {
+                vantagens: vantagensSelecionadas,        // Vantagens SEM graduação
+                vantagensGraduacao: vantagensGraduacao,  // Vantagens COM graduação
+                pp: ppTotal,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            await db.collection('fichas').doc(currentFichaId).update(updateData);
+            console.log('Estrutura salva corretamente:', updateData);
+        }
+
+        // Salvar progresso automaticamente
+        async function salvarProgresso() {
+            try {
+                await salvarEstruturaCorreta();
+                console.log('Progresso salvo com sucesso');
+            } catch (error) {
+                console.error('Erro ao salvar progresso:', error);
+                throw error;
+            }
         }
 
         // Sistema de busca
@@ -929,23 +1087,6 @@
             });
         }
 
-        // Salvar progresso automaticamente
-        async function salvarProgresso() {
-            try {
-                const updateData = {
-                    vantagens: vantagensSelecionadas,
-                    pp: ppTotal,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                await db.collection('fichas').doc(currentFichaId).update(updateData);
-                console.log('Progresso salvo com sucesso');
-            } catch (error) {
-                console.error('Erro ao salvar progresso:', error);
-                throw error;
-            }
-        }
-
         // Salvar e continuar
         async function saveAndContinue() {
             try {
@@ -955,6 +1096,7 @@
 
                 const updateData = {
                     vantagens: vantagensSelecionadas,
+                    vantagensGraduacao: vantagensGraduacao,
                     pp: ppTotal,
                     etapaCriacao: 4,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
