@@ -111,7 +111,6 @@
 
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
 
         .form-group label {
@@ -125,17 +124,19 @@
             position: relative;
         }
 
-        .input-with-icon i {
+        .input-with-icon i.fas.fa-envelope,
+        .input-with-icon i.fas.fa-lock {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: rgba(255, 255, 255, 0.6);
+            z-index: 1;
         }
 
         .input-with-icon input {
             width: 100%;
-            padding: 15px 15px 15px 45px;
+            padding: 15px 50px 15px 45px;
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(0, 0, 0, 0.2);
@@ -157,6 +158,16 @@
             transform: translateY(-50%);
             cursor: pointer;
             color: rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .btn {
@@ -278,7 +289,9 @@
                     <div class="input-with-icon">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="login-password" placeholder="Sua senha">
-                        <i class="fas fa-eye password-toggle" id="login-toggle-password"></i>
+                        <span class="password-toggle" id="login-toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </span>
                     </div>
                 </div>
                 
@@ -310,7 +323,9 @@
                     <div class="input-with-icon">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="register-password" placeholder="Mínimo 6 caracteres">
-                        <i class="fas fa-eye password-toggle" id="register-toggle-password"></i>
+                        <span class="password-toggle" id="register-toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </span>
                     </div>
                 </div>
                 
@@ -319,7 +334,9 @@
                     <div class="input-with-icon">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="confirm-password" placeholder="Digite novamente">
-                        <i class="fas fa-eye password-toggle" id="confirm-toggle-password"></i>
+                        <span class="password-toggle" id="confirm-toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </span>
                     </div>
                 </div>
                 
@@ -378,9 +395,13 @@
         // Alternar visibilidade da senha
         function setupPasswordToggle(passwordId, toggleId) {
             const passwordInput = document.getElementById(passwordId);
-            const toggleIcon = document.getElementById(toggleId);
+            const toggleContainer = document.getElementById(toggleId);
+            const toggleIcon = toggleContainer.querySelector('i');
             
-            toggleIcon.addEventListener('click', () => {
+            // Só o ícone tem a hitbox, não todo o container
+            toggleIcon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Previne que o clique se propague
+                
                 if (passwordInput.type === 'password') {
                     passwordInput.type = 'text';
                     toggleIcon.classList.remove('fa-eye');
@@ -390,6 +411,11 @@
                     toggleIcon.classList.remove('fa-eye-slash');
                     toggleIcon.classList.add('fa-eye');
                 }
+            });
+
+            // Previne que o clique no input ative o toggle
+            passwordInput.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
         }
 
@@ -473,10 +499,13 @@
             
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Criar documento do usuário no Firestore
+                    // Criar documento do usuário no Firestore na coleção 'usuarios'
                     const user = userCredential.user;
-                    return db.collection('users').doc(user.uid).set({
+                    return db.collection('usuarios').doc(user.uid).set({
                         email: user.email,
+                        ficha1: false,
+                        ficha2: false,
+                        ficha3: false,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -529,7 +558,7 @@
         auth.onAuthStateChanged((user) => {
             if (user && !user.isAnonymous) {
                 // Atualizar último login
-                db.collection('users').doc(user.uid).update({
+                db.collection('usuarios').doc(user.uid).update({
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
             }
