@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supernova RPG - Distribuir Atributos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajaxlers/font-awesome/6.4.0/css/all.min.css">
+    <title>Supernova RPG - Escolher Origem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -38,7 +38,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -46,8 +46,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -58,7 +58,7 @@
         }
 
         .logo h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -66,7 +66,7 @@
         }
 
         .logo i {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: var(--primary);
         }
 
@@ -74,7 +74,7 @@
             background: rgba(108, 99, 255, 0.2);
             border: 1px solid var(--primary);
             color: var(--light);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -82,7 +82,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9rem;
         }
 
         .back-btn:hover {
@@ -91,17 +90,17 @@
 
         .page-title {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .page-title h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
         }
 
         .page-title p {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .creation-card {
@@ -109,148 +108,132 @@
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
-        /* Sistema de PP */
-        .pp-counter {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 2px solid var(--primary);
+        /* Lista de Origens */
+        .origin-list {
+            margin: 20px 0;
         }
 
-        .pp-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 5px 0;
-        }
-
-        .pp-label {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Grade de Atributos Compacta */
-        .attributes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .attribute-card {
+        .origin-item {
             background: rgba(0, 0, 0, 0.3);
             padding: 20px;
             border-radius: 12px;
-            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            border: 2px solid transparent;
             transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 140px;
+            margin-bottom: 15px;
         }
 
-        .attribute-card:hover {
+        .origin-item:hover {
             border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .attribute-name {
+        .origin-item.selected {
+            border-color: var(--secondary);
+            background: rgba(255, 101, 132, 0.15);
+        }
+
+        .origin-name {
             font-weight: 700;
             color: var(--primary);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            text-align: center;
+            font-size: 1.3rem;
         }
 
-        .attribute-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--light);
-            margin: 10px 0;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .attribute-controls {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: auto;
-        }
-
-        .attr-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--primary);
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .attr-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
-        }
-
-        .attr-btn.decrease {
-            background: var(--secondary);
-        }
-
-        /* Informações Compactas */
-        .info-box {
+        /* Detalhes da Origem */
+        .origin-detail {
             background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 0 0 15px 0;
             border-left: 4px solid var(--primary);
+            display: none;
         }
 
-        .info-title {
+        .origin-detail.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .detail-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .detail-section {
+            margin: 20px 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .pericia-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .habilidade-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .habilidade-name {
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 8px;
-            font-size: 1rem;
         }
 
-        .info-text {
+        .habilidade-desc {
             color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
-            font-size: 0.9rem;
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
 
         /* Ações */
         .actions {
             display: flex;
-            gap: 12px;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 30px;
             justify-content: space-between;
         }
 
         .btn {
-            padding: 12px 20px;
+            padding: 15px 25px;
             border: none;
             border-radius: 10px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-primary {
@@ -273,13 +256,23 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .message {
-            padding: 12px;
+            padding: 15px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: none;
-            font-size: 0.9rem;
         }
 
         .message.success {
@@ -295,42 +288,18 @@
         }
 
         @media (max-width: 768px) {
-            .attributes-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            
-            .attribute-card {
-                padding: 15px;
-                min-height: 130px;
-            }
-            
             header {
                 flex-direction: column;
-                gap: 12px;
+                gap: 15px;
                 text-align: center;
             }
             
             .actions {
                 flex-direction: column;
             }
-        }
-
-        @media (max-width: 480px) {
-            .attributes-grid {
-                grid-template-columns: 1fr;
-            }
             
-            .attribute-card {
-                min-height: 120px;
-            }
-            
-            body {
-                padding: 15px;
-            }
-            
-            .creation-card {
-                padding: 20px;
+            .nav-buttons {
+                order: -1;
             }
         }
     </style>
@@ -348,34 +317,15 @@
         </header>
 
         <div class="page-title">
-            <h2>Distribuir Atributos</h2>
-            <p>Ajuste os atributos do seu herói</p>
+            <h2>Escolher Origem</h2>
+            <p>Selecione o passado e histórico do seu herói</p>
         </div>
 
         <div class="message" id="message"></div>
 
         <div class="creation-card">
-            <!-- Contador de PP -->
-            <div class="pp-counter">
-                <div class="pp-label">NÍVEL DE PODER DA FICHA</div>
-                <div class="pp-value" id="pp-value">0</div>
-                <div class="pp-label">Cada ponto de atributo adiciona 2 PP ao total</div>
-            </div>
-
-            <!-- Informações -->
-            <div class="info-box">
-                <div class="info-title">Sistema de Atributos:</div>
-                <div class="info-text">
-                    <p>• <strong>Aumentar atributo:</strong> +1 no atributo = +2 PP no total</p>
-                    <p>• <strong>Diminuir atributo:</strong> -1 no atributo = -2 PP no total</p>
-                    <p>• Atributos podem ficar negativos</p>
-                    <p>• PP representa o nível de poder total da ficha</p>
-                </div>
-            </div>
-
-            <!-- Grade de Atributos -->
-            <div class="attributes-grid" id="attributes-grid">
-                <!-- Atributos serão preenchidos via JavaScript -->
+            <div class="origin-list" id="origin-list">
+                <!-- Origens serão carregadas do Firebase -->
             </div>
 
             <div class="actions">
@@ -383,8 +333,8 @@
                     <button class="btn btn-secondary" id="back-to-arquetipo">
                         <i class="fas fa-arrow-left"></i> Anterior
                     </button>
-                    <button class="btn btn-primary" id="avancar-ficha">
-                        Avançar para Vantagens <i class="fas fa-arrow-right"></i>
+                    <button class="btn btn-primary" id="avancar-ficha" disabled>
+                        Avançar <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -407,25 +357,13 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Dados dos Atributos
-        const atributosData = {
-            'forca': 'Força',
-            'agilidade': 'Agilidade',
-            'luta': 'Luta',
-            'prontidao': 'Prontidão',
-            'vigor': 'Vigor',
-            'destreza': 'Destreza',
-            'intelecto': 'Intelecto',
-            'presenca': 'Presença'
-        };
-
         // Variáveis globais
         let currentUser = null;
         let currentFichaId = null;
         let currentSlot = null;
-        let ppTotal = 0;
-        let atributosAtuais = {};
-        let modificadorIdade = 0;
+        let selectedOrigin = null;
+        let originsData = {};
+        let currentDetailElement = null;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -445,7 +383,7 @@
                             window.location.href = 'fichas.html';
                         }, 2000);
                     } else {
-                        carregarDadosFicha();
+                        loadOrigins();
                     }
                 } else {
                     window.location.href = 'index.html';
@@ -453,152 +391,184 @@
             });
         });
 
-        // Carregar dados da ficha do Firebase
-        async function carregarDadosFicha() {
+        // Carregar origens do Firebase
+        async function loadOrigins() {
             try {
-                const fichaDoc = await db.collection('fichas').doc(currentFichaId).get();
+                const originList = document.getElementById('origin-list');
+                originList.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando origens...</div>';
+
+                const snapshot = await db.collection('origens').get();
                 
-                if (fichaDoc.exists) {
-                    const fichaData = fichaDoc.data();
-                    
-                    // Obter modificador de idade
-                    modificadorIdade = fichaData.modificadorIdade || 0;
-                    
-                    // Inicializar atributos com valores base + modificador de idade
-                    for (const atributo in atributosData) {
-                        atributosAtuais[atributo] = modificadorIdade;
-                    }
-                    
-                    // Se já existem atributos salvos, usar eles
-                    if (fichaData.atributos) {
-                        atributosAtuais = { ...fichaData.atributos };
-                    }
-                    
-                    // Calcular PP total baseado nos atributos atuais
-                    calcularPPTotal();
-                    
-                    // Atualizar interface
-                    atualizarInterfaceAtributos();
-                    atualizarContadorPP();
-                } else {
-                    showMessage('Ficha não encontrada. Redirecionando...', 'error');
-                    setTimeout(() => {
-                        window.location.href = 'fichas.html';
-                    }, 2000);
+                if (snapshot.empty) {
+                    originList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Nenhuma origem encontrada.</div>';
+                    return;
                 }
+
+                originList.innerHTML = '';
+                originsData = {};
+
+                snapshot.forEach(doc => {
+                    const originName = doc.id;
+                    const originData = doc.data();
+                    
+                    // Armazenar dados para uso posterior
+                    originsData[originName] = originData;
+                    
+                    // Criar item da lista
+                    const listItem = document.createElement('div');
+                    listItem.className = 'origin-item';
+                    listItem.setAttribute('data-origin', originName);
+                    
+                    listItem.innerHTML = `
+                        <div class="origin-name">${originName}</div>
+                    `;
+                    
+                    // Ao clicar: seleciona E expande os detalhes
+                    listItem.addEventListener('click', () => {
+                        selectOrigin(originName, listItem);
+                    });
+                    
+                    originList.appendChild(listItem);
+                });
+
             } catch (error) {
-                console.error('Erro ao carregar ficha:', error);
-                showMessage('Erro ao carregar dados da ficha.', 'error');
+                console.error('Erro ao carregar origens:', error);
+                showMessage('Erro ao carregar origens. Tente novamente.', 'error');
             }
         }
 
-        // Calcular PP total baseado nos atributos
-        function calcularPPTotal() {
-            ppTotal = 0;
-            for (const atributo in atributosAtuais) {
-                // Cada ponto acima do modificador de idade adiciona 2 PP
-                ppTotal += (atributosAtuais[atributo] - modificadorIdade) * 2;
-            }
-        }
+        // Mostrar detalhes da origem ABAIXO do item selecionado
+        function showOriginDetail(name, parentElement) {
+            const originData = originsData[name];
+            if (!originData) return;
 
-        // Atualizar interface dos atributos
-        function atualizarInterfaceAtributos() {
-            const attributesGrid = document.getElementById('attributes-grid');
-            attributesGrid.innerHTML = '';
+            // Remover detalhes anteriores
+            if (currentDetailElement) {
+                currentDetailElement.remove();
+                currentDetailElement = null;
+            }
+
+            // Criar elemento de detalhes
+            const detailElement = document.createElement('div');
+            detailElement.className = 'origin-detail active';
+            detailElement.setAttribute('data-origin-detail', name);
             
-            for (const [key, nome] of Object.entries(atributosData)) {
-                const valorAtual = atributosAtuais[key];
-                
-                const attributeCard = document.createElement('div');
-                attributeCard.className = 'attribute-card';
-                attributeCard.innerHTML = `
-                    <div class="attribute-name">${nome}</div>
-                    <div class="attribute-value">${valorAtual}</div>
-                    <div class="attribute-controls">
-                        <button class="attr-btn decrease" data-attribute="${key}">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <button class="attr-btn increase" data-attribute="${key}">
-                            <i class="fas fa-plus"></i>
-                        </button>
+            // Formatar habilidade
+            let habilidadeHTML = '';
+            if (originData.habilidade && originData.habilidade.name) {
+                habilidadeHTML = `
+                    <div class="habilidade-item">
+                        <div class="habilidade-name">${originData.habilidade.name}</div>
+                        <div class="habilidade-desc">${originData.habilidade.desc || 'Descrição não disponível.'}</div>
                     </div>
                 `;
-                
-                attributesGrid.appendChild(attributeCard);
+            } else {
+                habilidadeHTML = '<p>Habilidade não definida.</p>';
             }
+
+            detailElement.innerHTML = `
+                <div class="detail-title">${name}</div>
+                <div class="detail-description">${originData.descricao || 'Descrição não disponível.'}</div>
+                
+                <div class="detail-section">
+                    <div class="section-title">Perícia Fixa</div>
+                    <div class="pericia-item">${originData.periciaFixa || 'Nenhuma perícia fixa definida.'}</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="section-title">Habilidade Padrão</div>
+                    ${habilidadeHTML}
+                </div>
+            `;
             
-            // Adicionar event listeners aos botões
-            document.querySelectorAll('.attr-btn.increase').forEach(btn => {
-                btn.addEventListener('click', () => aumentarAtributo(btn.getAttribute('data-attribute')));
+            // Inserir os detalhes APÓS o item clicado
+            parentElement.parentNode.insertBefore(detailElement, parentElement.nextSibling);
+            currentDetailElement = detailElement;
+        }
+
+        // Selecionar origem
+        function selectOrigin(name, element) {
+            selectedOrigin = name;
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.origin-item').forEach(item => {
+                item.classList.remove('selected');
             });
             
-            document.querySelectorAll('.attr-btn.decrease').forEach(btn => {
-                btn.addEventListener('click', () => diminuirAtributo(btn.getAttribute('data-attribute')));
-            });
-        }
-
-        // Atualizar contador de PP
-        function atualizarContadorPP() {
-            document.getElementById('pp-value').textContent = ppTotal;
-        }
-
-        // Aumentar atributo
-        function aumentarAtributo(atributo) {
-            atributosAtuais[atributo]++;
-            ppTotal += 2; // Cada ponto de atributo adiciona 2 PP
-            atualizarInterfaceAtributos();
-            atualizarContadorPP();
-        }
-
-        // Diminuir atributo
-        function diminuirAtributo(atributo) {
-            atributosAtuais[atributo]--;
-            ppTotal -= 2; // Cada ponto de atributo removido subtrai 2 PP
-            atualizarInterfaceAtributos();
-            atualizarContadorPP();
+            // Adicionar seleção atual
+            element.classList.add('selected');
+            
+            // Mostrar detalhes
+            showOriginDetail(name, element);
+            
+            // Habilitar botão avançar
+            document.getElementById('avancar-ficha').disabled = false;
         }
 
         // Navegação
         function setupNavigation() {
-            document.getElementById('back-to-arquetipo').addEventListener('click', () => {
+            document.getElementById('back-to-arquetipo').addEventListener('click', async () => {
+                // Salvar antes de voltar
+                if (selectedOrigin) {
+                    await saveOrigin();
+                }
                 window.location.href = `criarficha2.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
             });
             
             document.getElementById('avancar-ficha').addEventListener('click', saveAndContinue);
         }
 
+        // Salvar origem (usado ao voltar também)
+        async function saveOrigin() {
+            if (!selectedOrigin) return;
+
+            try {
+                const updateData = {
+                    origem: selectedOrigin,
+                    etapaCriacao: 3,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('fichas').doc(currentFichaId).update(updateData);
+                return true;
+            } catch (error) {
+                console.error('Erro ao salvar origem:', error);
+                return false;
+            }
+        }
+
         // Salvar e continuar
         async function saveAndContinue() {
+            if (!selectedOrigin) {
+                showMessage('Por favor, selecione uma origem.', 'error');
+                return;
+            }
+
             try {
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = true;
                 avancarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
-                // Preparar dados para atualização
-                const updateData = {
-                    atributos: atributosAtuais,
-                    pp: ppTotal,
-                    etapaCriacao: 3,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+                const success = await saveOrigin();
+                
+                if (success) {
+                    showMessage('Origem salva com sucesso! Avançando...', 'success');
 
-                // Atualizar a ficha no Firebase
-                await db.collection('fichas').doc(currentFichaId).update(updateData);
-
-                showMessage('Atributos salvos com sucesso! Avançando...', 'success');
-
-                // Redirecionar para próxima etapa
-                setTimeout(() => {
-                    window.location.href = `criarficha4.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
-                }, 2000);
+                    // Redirecionar para próxima etapa
+                    setTimeout(() => {
+                        window.location.href = `criarficha4.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
+                    }, 2000);
+                } else {
+                    throw new Error('Falha ao salvar');
+                }
 
             } catch (error) {
-                console.error('Erro ao salvar atributos:', error);
-                showMessage('Erro ao salvar atributos. Tente novamente.', 'error');
+                console.error('Erro ao salvar origem:', error);
+                showMessage('Erro ao salvar origem. Tente novamente.', 'error');
                 
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = false;
-                avancarBtn.innerHTML = 'Avançar para Próxima Ficha <i class="fas fa-arrow-right"></i>';
+                avancarBtn.innerHTML = 'Avançar <i class="fas fa-arrow-right"></i>';
             }
         }
 

@@ -376,7 +376,7 @@
                 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="character-name">Nome do Herói *</label>
+                        <label for="character-name">Nome do Herói</label>
                         <div class="input-with-icon">
                             <i class="fas fa-mask"></i>
                             <input type="text" id="character-name" placeholder="Ex: Capitão América" required>
@@ -384,7 +384,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="alter-ego">Alter Ego</label>
+                        <label for="alter-ego">Alter Ego *</label>
                         <div class="input-with-icon">
                             <i class="fas fa-user-secret"></i>
                             <input type="text" id="alter-ego" placeholder="Ex: Steve Rogers">
@@ -392,21 +392,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="character-age">Idade *</label>
+                        <label for="character-age">Idade</label>
                         <div class="input-with-icon">
                             <i class="fas fa-birthday-cake"></i>
-                            <input type="number" id="character-age" min="1" max="100" value="25" required>
+                            <input type="number" id="character-age" min="1" max="100" value="25">
                         </div>
                     </div>
                 </div>
 
                 <div class="base-attributes">
                     <div class="attributes-info">
-                        <strong>Atributos Base:</strong> Todos começam em <span class="age-modifier" id="base-value">0</span>
+                        <strong>Atributos Base:</strong> Todos começam em <span class="age-modifier">0</span>
                     </div>
                     <div class="description-box">
-                        <strong>Modificador por Idade:</strong> <span id="age-description">+0 (18-69 anos)</span>
-                        <br><br>
                         <strong>Atributos que serão registrados:</strong>
                         <br>Força, Agilidade, Luta, Prontidão, Vigor, Destreza, Intelecto, Presença
                     </div>
@@ -430,22 +428,14 @@
                     <i class="fas fa-dna"></i> Origem dos Poderes
                 </h3>
                 
-                <div class="form-group">
-                    <label for="power-origin">Origem *</label>
+                <div class="form-group full-width">
+                    <label for="power-origin">Descreva a origem dos seus poderes</label>
                     <div class="input-with-icon">
                         <i class="fas fa-bolt"></i>
-                        <select id="power-origin" required>
-                            <option value="">Selecione a origem dos poderes</option>
-                            <option value="acidente">Acidente</option>
-                            <option value="alienigena">Alienígena</option>
-                            <option value="dadiva">Dádiva</option>
-                            <option value="experimento">Experimento</option>
-                            <option value="mutante">Mutante</option>
-                            <option value="treinamento">Treinamento</option>
-                        </select>
+                        <textarea id="power-origin" placeholder="Descreva como seu personagem obteve seus poderes..."></textarea>
                     </div>
-                    <div class="description-box" id="origin-description">
-                        Selecione uma origem para ver sua descrição...
+                    <div class="description-box">
+                        Descreva de forma criativa como seu personagem obteve seus poderes. Pode ser um acidente, uma dádiva, um experimento, treinamento árduo, ou qualquer outra origem que você imaginar.
                     </div>
                 </div>
 
@@ -455,7 +445,7 @@
                             <i class="fas fa-arrow-left"></i> Anterior
                         </button>
                         <button class="btn btn-primary" id="avancar-ficha">
-                            Avançar para Arquétipos <i class="fas fa-arrow-right"></i>
+                            Avançar<i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
@@ -479,31 +469,13 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Descrições detalhadas das origens
-        const originDescriptions = {
-            'acidente': 'Talvez a origem mais comum de todas. O herói ganha seus poderes por acidente, devido à exposição a alguma força como radiação, químicos, energias místicas fora de controle, ao ser atingido por um raio e assim por diante. Acidentes normalmente são eventos únicos, embora às vezes haja esforços para recriar um acidente para criar superseres deliberadamente. A ciência atual do cenário tende a influenciar origens por acidentes. Heróis da Era de Ouro nos anos 40 muitas vezes ganhavam seus poderes através de acidentes químicos, enquanto heróis da Era de Prata na Era Atômica dos anos 60 ganhavam seus poderes através da radiação e heróis modernos ganham seus poderes através de acidentes envolvendo engenharia genética, nanotecnologia e tecnologias igualmente de ponta.',
-            
-            'alienigena': 'Um herói pode ser um membro de uma espécie alienígena com poderes incomuns em comparação aos humanos. Ou todos os membros dessa espécie têm poderes semelhantes, ou condições específicas (gravidade mais fraca, radiação solar, etc.) lhes concedem poderes enquanto estão na Terra. Algumas espécies "alienígenas" dos quadrinhos são na verdade descendentes superpoderosos da humanidade vivendo isolados do resto do mundo. "Alienígena" também inclui seres místicos vindos de outras dimensões, de anjos e demônios a elementais e deuses, assim como mestiços mortais descendentes destes. Os poderes de um herói alienígena podem até ter uma origem diferente; ser um alienígena explica apenas parte dos poderes do herói ou é simplesmente um elemento de seu histórico.',
-            
-            'dadiva': 'Uma força exterior concede poderes ao herói. Pode ser através de uma experiência (veja a próxima entrada), um poder de nível divino, uma organização secreta que distribui mecanismos poderosos, um mago misterioso ou qualquer coisa similar. O patrono pode esperar algo em troca do herói por esta benção, ou o presente pode ser incondicional.',
-            
-            'experimento': 'Alguns heróis ganham poderes através de um esforço deliberado, através de uma técnica mística ou científica para transformar alguém em um ser superpoderoso. Como no caso dos acidentes, as experiências são quase sempre impossíveis de se duplicar. O herói pode ser um voluntário ou uma vítima escolhida como cobaia para a técnica em questão. Alguns heróis criam seus próprios poderes, tanto desenvolvendo procedimentos capazes de conceder poderes ou construindo seus próprios mecanismos.',
-            
-            'mutante': 'Um herói pode simplesmente ter nascido "diferente", com o potencial genético para desenvolver superpoderes. Seus poderes latentes normalmente emergem em situações de stress, especialmente durante as mudanças trazidas pela puberdade, embora também possam aparecer como resultado de um acidente (combinando as origens acidente e mutante).',
-            
-            'treinamento': 'Finalmente, alguns heróis desenvolvem poderes através de trabalho duro e treinamento, seja com rigor físico, estudando técnicas esotéricas de artes marciais, meditação e introspecção para alcançar poderes mentais secretos, ou dominando as artes mágicas. Esse treinamento é normalmente árduo e nem todo mundo tem o potencial necessário para alcançá-lo. Heróis que receberam seus poderes através de treinamento podem ter rivais ou inimigos que treinaram com eles (veja as complicações Inimigo e Rivalidade neste capítulo).'
-        };
-
         // Variáveis globais
         let currentUser = null;
         let currentSlot = null;
-        let ageModifier = 0;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             initializeTabs();
-            initializeAgeCalculator();
-            initializeOriginDescriptions();
             setupNavigation();
             
             // Verificar autenticação
@@ -550,58 +522,6 @@
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
         }
 
-        // Calculadora de Idade com as faixas específicas
-        function initializeAgeCalculator() {
-            const ageInput = document.getElementById('character-age');
-            
-            ageInput.addEventListener('input', updateAgeModifier);
-            updateAgeModifier();
-        }
-
-        function updateAgeModifier() {
-            const age = parseInt(document.getElementById('character-age').value);
-            const baseValue = document.getElementById('base-value');
-            const ageDescription = document.getElementById('age-description');
-            
-            // Aplicar as faixas de idade conforme especificado
-            if (age <= 6) {
-                ageModifier = -4;
-                baseValue.textContent = '-4';
-                ageDescription.textContent = '-4 (até 6 anos)';
-            } else if (age >= 7 && age <= 9) {
-                ageModifier = -3;
-                baseValue.textContent = '-3';
-                ageDescription.textContent = '-3 (7-9 anos)';
-            } else if ((age >= 10 && age <= 13) || age >= 70) {
-                ageModifier = -2;
-                baseValue.textContent = '-2';
-                ageDescription.textContent = '-2 (10-13 anos ou +70 anos)';
-            } else if (age >= 14 && age <= 17) {
-                ageModifier = -1;
-                baseValue.textContent = '-1';
-                ageDescription.textContent = '-1 (14-17 anos)';
-            } else if (age >= 18 && age <= 69) {
-                ageModifier = 0;
-                baseValue.textContent = '0';
-                ageDescription.textContent = '+0 (18-69 anos)';
-            }
-        }
-
-        // Descrições de Origem
-        function initializeOriginDescriptions() {
-            const originSelect = document.getElementById('power-origin');
-            const originDescription = document.getElementById('origin-description');
-            
-            originSelect.addEventListener('change', () => {
-                const selectedOrigin = originSelect.value;
-                if (selectedOrigin && originDescriptions[selectedOrigin]) {
-                    originDescription.textContent = originDescriptions[selectedOrigin];
-                } else {
-                    originDescription.textContent = 'Selecione uma origem para ver sua descrição...';
-                }
-            });
-        }
-
         // Navegação entre abas
         function setupNavigation() {
             document.getElementById('next-to-origem').addEventListener('click', () => {
@@ -619,15 +539,9 @@
         // Validar dados da aba Identidade
         function validateIdentidade() {
             const nome = document.getElementById('character-name').value;
-            const idade = document.getElementById('character-age').value;
             
-            if (!nome.trim()) {
-                showMessage('Por favor, preencha o nome do herói.', 'error');
-                return false;
-            }
-            
-            if (!idade || idade < 1 || idade > 100) {
-                showMessage('Por favor, insira uma idade válida entre 1 e 100 anos.', 'error');
+            if (!alterEgo.trim()) {
+                showMessage('Por favor, preencha o alter ego.', 'error');
                 return false;
             }
             
@@ -647,8 +561,8 @@
             const idade = document.getElementById('character-age').value;
             const origem = document.getElementById('power-origin').value;
 
-            if (!nome || !origem) {
-                showMessage('Por favor, preencha todos os campos obrigatórios (*).', 'error');
+            if (!alterEgo) {
+                showMessage('Por favor, preencha o alter ego.', 'error');
                 return;
             }
 
@@ -657,22 +571,21 @@
                 // Identidade
                 nome: nome,
                 alterEgo: alterEgo,
-                idade: parseInt(idade),
-                modificadorIdade: ageModifier,
+                idade: idade ? parseInt(idade) : null,
                 
                 // Origem
                 origem: origem,
                 
-                // Atributos base com modificador de idade
+                // Atributos base (todos começam em 0)
                 atributos: {
-                    forca: ageModifier,
-                    agilidade: ageModifier,
-                    luta: ageModifier,
-                    prontidao: ageModifier,
-                    vigor: ageModifier,
-                    destreza: ageModifier,
-                    intelecto: ageModifier,
-                    presenca: ageModifier
+                    forca: 0,
+                    agilidade: 0,
+                    luta: 0,
+                    prontidao: 0,
+                    vigor: 0,
+                    destreza: 0,
+                    intelecto: 0,
+                    presenca: 0
                 },
                 
                 // Metadados
@@ -709,7 +622,7 @@
                 
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = false;
-                avancarBtn.innerHTML = 'Avançar para Ficha <i class="fas fa-arrow-right"></i>';
+                avancarBtn.innerHTML = 'Avançar<i class="fas fa-arrow-right"></i>';
             }
         }
 

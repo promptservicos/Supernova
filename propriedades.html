@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrador de Efeitos - Supernova RPG</title>
+    <title>Registrador de Propriedades - Supernova RPG</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -146,12 +146,6 @@
             min-height: 100px;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
         .btn {
             padding: 15px 30px;
             border: none;
@@ -177,16 +171,6 @@
             box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
         .message {
             margin-top: 20px;
             padding: 15px;
@@ -207,16 +191,16 @@
             color: #ef9a9a;
         }
 
-        .effects-list {
+        .properties-list {
             margin-top: 30px;
         }
 
-        .effects-list h2 {
+        .properties-list h2 {
             margin-bottom: 15px;
             color: rgba(255, 255, 255, 0.9);
         }
 
-        .effect-item {
+        .property-item {
             background: rgba(0, 0, 0, 0.3);
             padding: 15px;
             margin-bottom: 10px;
@@ -224,37 +208,39 @@
             border-left: 4px solid #6C63FF;
         }
 
-        .effect-header {
+        .property-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
 
-        .effect-code {
+        .property-code {
             font-weight: bold;
             color: #6C63FF;
             font-size: 1.1rem;
+            margin-right: 10px;
         }
 
-        .effect-name {
+        .property-name {
             font-weight: 600;
             font-size: 1.2rem;
         }
 
-        .effect-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
+        .property-category {
+            background: rgba(255, 101, 132, 0.2);
+            color: #FF6584;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
-        .effect-description {
+        .property-description {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
             line-height: 1.4;
+            margin-bottom: 10px;
         }
 
         .delete-btn {
@@ -279,15 +265,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📝 Registrador de Efeitos</h1>
-            <p>Supernova RPG - Cadastre efeitos de poderes no sistema</p>
+            <h1>📝 Registrador de Propriedades</h1>
+            <p>Supernova RPG - Cadastre propriedades de poderes no sistema</p>
         </div>
 
         <!-- Tela de Login -->
         <div id="login-container" class="login-container">
             <h3>Faça login para continuar</h3>
             <p style="margin: 15px 0; color: rgba(255,255,255,0.7);">
-                Você precisa estar autenticado para registrar efeitos.
+                Você precisa estar autenticado para registrar propriedades.
             </p>
             <button id="login-btn" class="login-btn">
                 🔐 Fazer Login com Google
@@ -305,72 +291,43 @@
 
         <!-- Formulário (só aparece quando logado) -->
         <div id="form-container" class="form-container hidden">
-            <form id="effect-form">
+            <form id="property-form">
                 <div class="form-group">
-                    <label for="codigo">Código do Efeito (ex: EF01, EF02)</label>
-                    <input type="text" id="codigo" placeholder="EF01" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nome">Nome do Efeito</label>
-                    <input type="text" id="nome" placeholder="Ex: Bola de Fogo" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tipo">Tipo</label>
-                        <select id="tipo" required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="Ataque">Ataque</option>
-                            <option value="Defesa">Defesa</option>
-                            <option value="Utilidade">Utilidade</option>
-                            <option value="Suporte">Suporte</option>
-                            <option value="Movimento">Movimento</option>
-                            <option value="Controle">Controle</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="custo">Custo (em PP)</label>
-                        <input type="number" id="custo" placeholder="2" min="0" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="alcance">Alcance</label>
-                        <input type="text" id="alcance" placeholder="Ex: Curto, Médio, Toque" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="duracao">Duração</label>
-                        <input type="text" id="duracao" placeholder="Ex: Instantânea, Cena, Sustentada" required>
-                    </div>
+                    <label for="nome">Nome da Propriedade</label>
+                    <input type="text" id="nome" placeholder="Ex: Área, Toque, Sustentada" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="resistencia">Resistência</label>
-                    <input type="text" id="resistencia" placeholder="Ex: Vigor, Vontade, Reflexos">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" required>
+                        <option value="">Selecione a categoria</option>
+                        <option value="Expansão">Expansão</option>
+                        <option value="Controle">Controle</option>
+                        <option value="Aprimoramento">Aprimoramento</option>
+                        <option value="Manifestação">Manifestação</option>
+                        <option value="Adaptação">Adaptação</option>
+                        <option value="Conceituação">Conceituação</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="descricao">Descrição do Efeito</label>
-                    <textarea id="descricao" placeholder="Descreva o efeito em detalhes..." required></textarea>
+                    <label for="descricao">Descrição da Propriedade</label>
+                    <textarea id="descricao" placeholder="Descreva a propriedade em detalhes..." required></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Registrar Efeito
+                    <i class="fas fa-plus"></i> Registrar Propriedade
                 </button>
             </form>
 
             <div class="message" id="message"></div>
         </div>
 
-        <!-- Lista de efeitos -->
-        <div class="effects-list">
-            <h2>Efeitos Cadastrados</h2>
-            <div id="effects-container">
-                <!-- Lista de efeitos será preenchida aqui -->
+        <!-- Lista de propriedades -->
+        <div class="properties-list">
+            <h2>Propriedades Cadastradas</h2>
+            <div id="properties-container">
+                <!-- Lista de propriedades será preenchida aqui -->
             </div>
         </div>
     </div>
@@ -398,9 +355,9 @@
         const userEmail = document.getElementById('user-email');
         const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
-        const effectForm = document.getElementById('effect-form');
+        const propertyForm = document.getElementById('property-form');
         const messageDiv = document.getElementById('message');
-        const effectsContainer = document.getElementById('effects-container');
+        const propertiesContainer = document.getElementById('properties-container');
 
         // Provedor do Google
         const provider = new firebase.auth.GoogleAuthProvider();
@@ -413,13 +370,13 @@
                 loginContainer.classList.add('hidden');
                 userInfo.classList.remove('hidden');
                 formContainer.classList.remove('hidden');
-                carregarEfeitos();
+                carregarPropriedades();
             } else {
                 // Usuário não logado
                 loginContainer.classList.remove('hidden');
                 userInfo.classList.add('hidden');
                 formContainer.classList.add('hidden');
-                effectsContainer.innerHTML = '<div class="effect-item">Faça login para ver os efeitos.</div>';
+                propertiesContainer.innerHTML = '<div class="property-item">Faça login para ver as propriedades.</div>';
             }
         });
 
@@ -446,126 +403,139 @@
                 });
         });
 
+        // Função para gerar próximo código sequencial
+        async function gerarProximoCodigo() {
+            try {
+                // Buscar todas as propriedades ordenadas por código
+                const propertiesSnapshot = await db.collection('propriedades')
+                    .orderBy('codigo', 'desc')
+                    .limit(1)
+                    .get();
+
+                if (propertiesSnapshot.empty) {
+                    return 'PR01'; // Primeira propriedade
+                }
+
+                // Pegar o último código
+                const lastProperty = propertiesSnapshot.docs[0].data();
+                const lastCode = lastProperty.codigo;
+                
+                // Extrair número e incrementar
+                const lastNumber = parseInt(lastCode.replace('PR', ''));
+                const nextNumber = lastNumber + 1;
+                
+                // Formatar com 2 dígitos
+                return 'PR' + nextNumber.toString().padStart(2, '0');
+                
+            } catch (error) {
+                console.error('Erro ao gerar código:', error);
+                // Fallback: usar timestamp como código único
+                return 'PR' + Date.now().toString().slice(-4);
+            }
+        }
+
         // Submeter formulário
-        effectForm.addEventListener('submit', async function(e) {
+        propertyForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const user = auth.currentUser;
             if (!user) {
-                showMessage('Você precisa estar logado para registrar efeitos.', 'error');
+                showMessage('Você precisa estar logado para registrar propriedades.', 'error');
                 return;
             }
             
-            const codigo = document.getElementById('codigo').value.toUpperCase();
             const nome = document.getElementById('nome').value;
-            const tipo = document.getElementById('tipo').value;
-            const alcance = document.getElementById('alcance').value;
-            const duracao = document.getElementById('duracao').value;
-            const resistencia = document.getElementById('resistencia').value;
-            const custo = parseInt(document.getElementById('custo').value);
+            const categoria = document.getElementById('categoria').value;
             const descricao = document.getElementById('descricao').value;
 
             try {
-                // Verificar se o código já existe
-                const existingDoc = await db.collection('efeitos').doc(codigo).get();
-                if (existingDoc.exists) {
-                    showMessage(`Erro: O código ${codigo} já existe!`, 'error');
-                    return;
-                }
+                // Gerar código sequencial
+                const codigo = await gerarProximoCodigo();
 
-                // Criar documento
-                await db.collection('efeitos').doc(codigo).set({
+                // Criar documento com código sequencial
+                await db.collection('propriedades').doc(codigo).set({
+                    codigo: codigo,
                     nome: nome,
-                    tipo: tipo,
-                    alcance: alcance,
-                    duracao: duracao,
-                    resistencia: resistencia,
-                    custo: custo,
+                    categoria: categoria,
                     descricao: descricao,
                     createdBy: user.uid,
                     createdByEmail: user.email,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                showMessage(`Efeito ${codigo} registrado com sucesso!`, 'success');
+                showMessage(`Propriedade "${nome}" (${codigo}) registrada com sucesso!`, 'success');
                 
                 // Limpar formulário
-                effectForm.reset();
+                propertyForm.reset();
                 
                 // Recarregar lista
-                carregarEfeitos();
+                carregarPropriedades();
 
             } catch (error) {
-                console.error('Erro ao registrar efeito:', error);
-                showMessage('Erro ao registrar efeito. Tente novamente.', 'error');
+                console.error('Erro ao registrar propriedade:', error);
+                showMessage('Erro ao registrar propriedade. Tente novamente.', 'error');
             }
         });
 
-        // Carregar efeitos existentes
-        async function carregarEfeitos() {
+        // Carregar propriedades existentes
+        async function carregarPropriedades() {
             try {
-                const effectsSnapshot = await db.collection('efeitos').orderBy('createdAt').get();
-                effectsContainer.innerHTML = '';
+                const propertiesSnapshot = await db.collection('propriedades').orderBy('codigo').get();
+                propertiesContainer.innerHTML = '';
 
-                if (effectsSnapshot.empty) {
-                    effectsContainer.innerHTML = '<div class="effect-item">Nenhum efeito cadastrado ainda.</div>';
+                if (propertiesSnapshot.empty) {
+                    propertiesContainer.innerHTML = '<div class="property-item">Nenhuma propriedade cadastrada ainda.</div>';
                     return;
                 }
 
-                effectsSnapshot.forEach(doc => {
-                    const effect = doc.data();
-                    const effectItem = document.createElement('div');
-                    effectItem.className = 'effect-item';
+                propertiesSnapshot.forEach(doc => {
+                    const property = doc.data();
+                    const propertyItem = document.createElement('div');
+                    propertyItem.className = 'property-item';
                     
-                    effectItem.innerHTML = `
-                        <div class="effect-header">
+                    propertyItem.innerHTML = `
+                        <div class="property-header">
                             <div>
-                                <span class="effect-code">${doc.id}</span>
-                                <span class="effect-name">${effect.nome}</span>
+                                <span class="property-code">${property.codigo}</span>
+                                <span class="property-name">${property.nome}</span>
+                                <span class="property-category">${property.categoria}</span>
                             </div>
-                            ${auth.currentUser && auth.currentUser.uid === effect.createdBy ? 
-                                `<button class="delete-btn" data-id="${doc.id}">Excluir</button>` : 
-                                `<span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">por ${effect.createdByEmail}</span>`
+                            ${auth.currentUser && auth.currentUser.uid === property.createdBy ? 
+                                `<button class="delete-btn" data-id="${property.codigo}">Excluir</button>` : 
+                                `<span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">por ${property.createdByEmail}</span>`
                             }
                         </div>
-                        <div class="effect-details">
-                            <div><strong>Tipo:</strong> ${effect.tipo}</div>
-                            <div><strong>Custo:</strong> ${effect.custo} PP</div>
-                            <div><strong>Alcance:</strong> ${effect.alcance}</div>
-                            <div><strong>Duração:</strong> ${effect.duracao}</div>
-                            <div><strong>Resistência:</strong> ${effect.resistencia || 'Nenhuma'}</div>
-                        </div>
-                        <div class="effect-description">${effect.descricao}</div>
+                        <div class="property-description">${property.descricao}</div>
                     `;
 
-                    effectsContainer.appendChild(effectItem);
+                    propertiesContainer.appendChild(propertyItem);
                 });
 
                 // Adicionar event listeners para botões de exclusão
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async function() {
-                        const effectId = this.getAttribute('data-id');
-                        if (confirm(`Tem certeza que deseja excluir o efeito ${effectId}?`)) {
-                            await excluirEfeito(effectId);
+                        const propertyId = this.getAttribute('data-id');
+                        if (confirm(`Tem certeza que deseja excluir a propriedade ${propertyId}?`)) {
+                            await excluirPropriedade(propertyId);
                         }
                     });
                 });
 
             } catch (error) {
-                console.error('Erro ao carregar efeitos:', error);
-                effectsContainer.innerHTML = '<div class="effect-item">Erro ao carregar efeitos.</div>';
+                console.error('Erro ao carregar propriedades:', error);
+                propertiesContainer.innerHTML = '<div class="property-item">Erro ao carregar propriedades.</div>';
             }
         }
 
-        // Excluir efeito
-        async function excluirEfeito(effectId) {
+        // Excluir propriedade
+        async function excluirPropriedade(propertyId) {
             try {
-                await db.collection('efeitos').doc(effectId).delete();
-                showMessage(`Efeito ${effectId} excluído com sucesso!`, 'success');
-                carregarEfeitos();
+                await db.collection('propriedades').doc(propertyId).delete();
+                showMessage(`Propriedade ${propertyId} excluída com sucesso!`, 'success');
+                carregarPropriedades();
             } catch (error) {
-                console.error('Erro ao excluir efeito:', error);
-                showMessage('Erro ao excluir efeito.', 'error');
+                console.error('Erro ao excluir propriedade:', error);
+                showMessage('Erro ao excluir propriedade.', 'error');
             }
         }
 

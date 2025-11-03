@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supernova RPG - Escolher Vantagens</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajaxlers/font-awesome/6.4.0/css/all.min.css">
+    <title>Supernova RPG - Escolher Perícias</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -46,8 +46,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -58,7 +58,7 @@
         }
 
         .logo h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -66,7 +66,7 @@
         }
 
         .logo i {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: var(--primary);
         }
 
@@ -74,7 +74,7 @@
             background: rgba(108, 99, 255, 0.2);
             border: 1px solid var(--primary);
             color: var(--light);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -82,7 +82,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9rem;
         }
 
         .back-btn:hover {
@@ -91,17 +90,17 @@
 
         .page-title {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .page-title h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
         }
 
         .page-title p {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .creation-card {
@@ -109,290 +108,140 @@
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
-        /* Sistema de PP */
-        .pp-counter {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 2px solid var(--primary);
-        }
-
-        .pp-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 5px 0;
-        }
-
-        .pp-label {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Sistema de Abas para Categorias */
-        .category-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 4px;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .category-tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px 8px;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            min-width: 140px;
-            font-size: 0.9rem;
-        }
-
-        .category-tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .category-content {
-            display: none;
-        }
-
-        .category-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* LISTA de Vantagens (em vez de grade) */
-        .advantages-list {
-            margin: 15px 0;
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .advantage-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .advantage-item:hover {
-            border-color: var(--primary);
-            background: rgba(108, 99, 255, 0.1);
-        }
-
-        .advantage-item.selected {
-            border-color: var(--secondary);
+        /* Informações obrigatórias */
+        .obrigatorias-info {
             background: rgba(255, 101, 132, 0.1);
-        }
-
-        .advantage-info {
-            flex: 1;
-        }
-
-        .advantage-name {
-            font-weight: 600;
-            color: var(--light);
-            font-size: 1rem;
-            margin-bottom: 6px;
-        }
-
-        .advantage-description {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-            line-height: 1.3;
-            margin-bottom: 4px;
-        }
-
-        .advantage-category {
-            font-size: 0.75rem;
-            color: var(--secondary);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Controles de Graduação */
-        .graduation-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 15px;
-        }
-
-        .graduation-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: none;
-            background: var(--primary);
-            color: white;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .graduation-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .graduation-btn.decrease {
-            background: var(--secondary);
-        }
-
-        .graduation-value {
-            font-weight: 600;
-            color: var(--light);
-            min-width: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        /* Busca e Filtros */
-        .search-box {
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 1rem;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        /* Vantagens Selecionadas */
-        .selected-advantages {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
+            border: 1px solid var(--secondary);
             border-radius: 12px;
-            margin: 20px 0;
-            border-left: 4px solid var(--secondary);
+            padding: 20px;
+            margin-bottom: 25px;
         }
 
-        .selected-title {
-            font-weight: 600;
+        .obrigatorias-title {
             color: var(--secondary);
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .selected-list {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             gap: 10px;
         }
 
-        .selected-item {
-            background: rgba(255, 101, 132, 0.2);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+        .obrigatorias-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .obrigatoria-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--secondary);
+        }
+
+        /* Lista de Perícias */
+        .pericias-list {
+            margin: 20px 0;
+        }
+
+        .pericia-category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .pericia-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
+            gap: 15px;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            border: 2px solid transparent;
         }
 
-        .selected-item:hover {
-            background: rgba(255, 101, 132, 0.3);
+        .pericia-item:hover {
+            border-color: var(--primary);
+        }
+
+        .pericia-item.selected {
             border-color: var(--secondary);
-            transform: translateY(-2px);
+            background: rgba(255, 101, 132, 0.15);
         }
 
-        .selected-item .graduation {
-            background: var(--secondary);
-            color: white;
+        .pericia-checkbox {
             width: 20px;
             height: 20px;
-            border-radius: 50%;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pericia-checkbox.checked {
+            background: var(--primary);
+        }
+
+        .pericia-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
             font-weight: bold;
         }
 
-        /* Informações */
-        .info-box {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid var(--primary);
+        .pericia-info {
+            flex: 1;
         }
 
-        .info-title {
+        .pericia-name {
             font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 1rem;
+            color: var(--light);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
         }
 
-        .info-text {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
+        .pericia-atributo {
+            color: var(--primary);
             font-size: 0.9rem;
+            font-style: italic;
         }
 
         /* Ações */
         .actions {
             display: flex;
-            gap: 12px;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 30px;
             justify-content: space-between;
         }
 
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
         .btn {
-            padding: 12px 20px;
+            padding: 15px 25px;
             border: none;
             border-radius: 10px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-primary {
@@ -415,13 +264,23 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .message {
-            padding: 12px;
+            padding: 15px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: none;
-            font-size: 0.9rem;
         }
 
         .message.success {
@@ -437,39 +296,28 @@
         }
 
         @media (max-width: 768px) {
-            .advantage-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .graduation-controls {
-                margin-left: 0;
-                margin-top: 10px;
-                align-self: flex-end;
-            }
-            
-            .category-tabs {
-                flex-direction: column;
-            }
-            
-            .category-tab {
-                min-width: auto;
+            .obrigatorias-list {
+                grid-template-columns: 1fr;
             }
             
             header {
                 flex-direction: column;
-                gap: 12px;
+                gap: 15px;
                 text-align: center;
             }
             
-            .nav-buttons {
+            .actions {
                 flex-direction: column;
-                width: 100%;
             }
             
-            .btn {
-                width: 100%;
-                justify-content: center;
+            .nav-buttons {
+                order: -1;
+            }
+            
+            .pericia-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
         }
     </style>
@@ -487,88 +335,30 @@
         </header>
 
         <div class="page-title">
-            <h2>Escolher Vantagens</h2>
-            <p>Selecione as vantagens do seu herói</p>
+            <h2>Escolher Perícias</h2>
+            <p>Selecione as perícias do seu herói</p>
         </div>
 
         <div class="message" id="message"></div>
 
         <div class="creation-card">
-            <!-- Contador de PP -->
-            <div class="pp-counter">
-                <div class="pp-label">NÍVEL DE PODER DA FICHA</div>
-                <div class="pp-value" id="pp-value">0</div>
-                <div class="pp-label">Cada vantagem adiciona 1 PP ao total</div>
-            </div>
-
-            <!-- Informações -->
-            <div class="info-box">
-                <div class="info-title">Sistema de Vantagens:</div>
-                <div class="info-text">
-                    <p>• <strong>Cada vantagem:</strong> +1 PP no total</p>
-                    <p>• <strong>Vantagens com graduação:</strong> Cada nível adicional também adiciona +1 PP</p>
-                    <p>• Clique na vantagem para selecionar/deselecionar</p>
-                    <p>• Use os controles +/- para ajustar a graduação (apenas em vantagens que permitem)</p>
-                    <p>• <strong>Dica:</strong> Clique nas vantagens selecionadas abaixo para removê-las rapidamente</p>
+            <div class="obrigatorias-info" id="obrigatorias-info" style="display: none;">
+                <div class="obrigatorias-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Perícias Obrigatórias
+                </div>
+                <div class="obrigatorias-list" id="obrigatorias-list">
+                    <!-- Perícias obrigatórias serão carregadas aqui -->
                 </div>
             </div>
 
-            <!-- Busca -->
-            <div class="search-box">
-                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Buscar vantagens por nome ou descrição...">
-            </div>
-
-            <!-- Abas de Categorias -->
-            <div class="category-tabs">
-                <div class="category-tab active" data-category="combate">Vantagens de Combate</div>
-                <div class="category-tab" data-category="pericia">Vantagens de Perícia</div>
-                <div class="category-tab" data-category="sorte">Vantagens de Sorte</div>
-                <div class="category-tab" data-category="gerais">Vantagens Gerais</div>
-                <div class="category-tab" data-category="todas">Todas as Vantagens</div>
-            </div>
-
-            <!-- Conteúdo das Categorias -->
-            <div class="category-content active" id="combate-content">
-                <div class="advantages-list" id="combate-list">
-                    <!-- Vantagens de Combate serão preenchidas via JavaScript -->
-                </div>
-            </div>
-
-            <div class="category-content" id="pericia-content">
-                <div class="advantages-list" id="pericia-list">
-                    <!-- Vantagens de Perícia serão preenchidas via JavaScript -->
-                </div>
-            </div>
-
-            <div class="category-content" id="sorte-content">
-                <div class="advantages-list" id="sorte-list">
-                    <!-- Vantagens de Sorte serão preenchidas via JavaScript -->
-                </div>
-            </div>
-
-            <div class="category-content" id="gerais-content">
-                <div class="advantages-list" id="gerais-list">
-                    <!-- Vantagens Gerais serão preenchidas via JavaScript -->
-                </div>
-            </div>
-
-            <div class="category-content" id="todas-content">
-                <div class="advantages-list" id="todas-list">
-                    <!-- Todas as vantagens serão preenchidas via JavaScript -->
-                </div>
-            </div>
-
-            <!-- Vantagens Selecionadas -->
-            <div class="selected-advantages" id="selected-advantages" style="display: none;">
-                <div class="selected-title">Vantagens Selecionadas <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">(clique para remover)</span></div>
-                <div class="selected-list" id="selected-list">
-                    <!-- Vantagens selecionadas aparecerão aqui -->
-                </div>
+            <div class="pericias-list" id="pericias-list">
+                <!-- Perícias serão carregadas do Firebase -->
             </div>
 
             <div class="actions">
                 <div class="nav-buttons">
-                    <button class="btn btn-secondary" id="back-to-atributos">
+                    <button class="btn btn-secondary" id="back-to-origem">
                         <i class="fas fa-arrow-left"></i> Anterior
                     </button>
                     <button class="btn btn-primary" id="avancar-ficha">
@@ -599,16 +389,15 @@
         let currentUser = null;
         let currentFichaId = null;
         let currentSlot = null;
-        let ppTotal = 0;
-        let vantagensSelecionadas = {};
-        let vantagensGraduacao = {};
-        let todasVantagens = [];
+        let selectedPericias = [];
+        let fichaData = null;
+        let arquetipoData = null;
+        let origemData = null;
+        let periciasObrigatorias = [];
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Inicializando página de vantagens...');
             setupNavigation();
-            setupSearch();
             
             // Verificar autenticação e parâmetros
             auth.onAuthStateChanged((user) => {
@@ -618,15 +407,13 @@
                     currentFichaId = urlParams.get('fichaId');
                     currentSlot = urlParams.get('slot');
                     
-                    console.log('Parâmetros:', { currentFichaId, currentSlot });
-                    
                     if (!currentFichaId || !currentSlot) {
                         showMessage('Parâmetros inválidos. Redirecionando...', 'error');
                         setTimeout(() => {
                             window.location.href = 'fichas.html';
                         }, 2000);
                     } else {
-                        carregarDadosFicha();
+                        loadFichaData();
                     }
                 } else {
                     window.location.href = 'index.html';
@@ -634,12 +421,9 @@
             });
         });
 
-        // Carregar dados da ficha e vantagens
-        async function carregarDadosFicha() {
+        // Carregar dados da ficha
+        async function loadFichaData() {
             try {
-                console.log('Carregando dados da ficha...');
-                
-                // Carregar ficha
                 const fichaDoc = await db.collection('fichas').doc(currentFichaId).get();
                 
                 if (!fichaDoc.exists) {
@@ -650,441 +434,214 @@
                     return;
                 }
 
-                const fichaData = fichaDoc.data();
-                console.log('Dados da ficha carregados:', fichaData);
+                fichaData = fichaDoc.data();
                 
-                // Carregar PP total
-                ppTotal = fichaData.pp || 0;
-                
-                // Carregar vantagens selecionadas (sistema antigo - para compatibilidade)
-                if (fichaData.vantagens && typeof fichaData.vantagens === 'object') {
-                    vantagensSelecionadas = { ...fichaData.vantagens };
-                }
-                
-                // Carregar vantagens com graduação (novo sistema)
-                if (fichaData.vantagensGraduacao && typeof fichaData.vantagensGraduacao === 'object') {
-                    vantagensGraduacao = { ...fichaData.vantagensGraduacao };
-                }
-                
-                console.log('Vantagens selecionadas:', vantagensSelecionadas);
-                console.log('Vantagens com graduação:', vantagensGraduacao);
-                
-                // Carregar todas as vantagens da coleção
-                await carregarTodasVantagens();
-                
-                // Migrar dados antigos se necessário
-                await migrarParaNovoSistema();
-                
-                // Atualizar interface
-                atualizarContadorPP();
-                atualizarVantagensSelecionadas();
-                
+                // Carregar dados do arquétipo e origem
+                await Promise.all([
+                    loadArquetipoData(),
+                    loadOrigemData()
+                ]);
+
+                // Carregar perícias após ter os dados obrigatórios
+                await loadPericias();
+
             } catch (error) {
-                console.error('Erro ao carregar ficha:', error);
-                showMessage('Erro ao carregar dados da ficha.', 'error');
+                console.error('Erro ao carregar dados da ficha:', error);
+                showMessage('Erro ao carregar dados. Tente novamente.', 'error');
             }
         }
 
-        // Migrar dados do sistema antigo para o novo
-        async function migrarParaNovoSistema() {
-            console.log('Verificando migração de dados...');
+        // Carregar dados do arquétipo
+        async function loadArquetipoData() {
+            if (!fichaData.arquetipo) return;
             
-            let precisaMigrar = false;
-            const vantagensParaMigrar = {};
-            
-            // Verificar se há vantagens no sistema antigo que precisam ser migradas
-            for (const [codigo, valor] of Object.entries(vantagensSelecionadas)) {
-                const vantagem = todasVantagens.find(v => v.id === codigo);
-                if (vantagem) {
-                    const temGraduacao = vantagem.graduacao === true || 
-                                       vantagem.graduacao === 'true' || 
-                                       vantagem.graduacao === 1;
-                    
-                    if (temGraduacao && valor > 0) {
-                        // Esta vantagem deve estar em vantagensGraduacao
-                        vantagensParaMigrar[codigo] = valor;
-                        precisaMigrar = true;
-                    } else if (!temGraduacao && valor === 0) {
-                        // Está correto no sistema antigo
-                        continue;
-                    } else {
-                        // Dados inconsistentes - remover
-                        delete vantagensSelecionadas[codigo];
-                        precisaMigrar = true;
-                    }
-                }
-            }
-            
-            if (precisaMigrar) {
-                console.log('Migrando dados para novo sistema...', vantagensParaMigrar);
-                
-                // Mover vantagens para o sistema correto
-                for (const [codigo, valor] of Object.entries(vantagensParaMigrar)) {
-                    vantagensGraduacao[codigo] = valor;
-                    delete vantagensSelecionadas[codigo];
-                }
-                
-                // Salvar a migração
-                await salvarEstruturaCorreta();
-                console.log('Migração concluída com sucesso!');
-            }
-        }
-
-        // Carregar todas as vantagens da coleção
-        async function carregarTodasVantagens() {
             try {
-                console.log('Carregando vantagens da coleção...');
-                const vantagensSnapshot = await db.collection('vantagens').get();
-                
-                todasVantagens = [];
-                vantagensSnapshot.forEach(doc => {
-                    const vantagemData = doc.data();
-                    
-                    todasVantagens.push({
-                        id: doc.id,
-                        ...vantagemData
-                    });
-                });
-                
-                console.log(`Carregadas ${todasVantagens.length} vantagens da coleção`);
-                renderizarVantagens();
-                
+                const arquetipoDoc = await db.collection('arquetipos').doc(fichaData.arquetipo).get();
+                if (arquetipoDoc.exists) {
+                    arquetipoData = arquetipoDoc.data();
+                }
             } catch (error) {
-                console.error('Erro ao carregar vantagens:', error);
-                showMessage('Erro ao carregar lista de vantagens.', 'error');
+                console.error('Erro ao carregar arquétipo:', error);
             }
         }
 
-        // Renderizar vantagens nas categorias
-        function renderizarVantagens() {
-            const categorias = ['combate', 'pericia', 'sorte', 'gerais', 'todas'];
+        // Carregar dados da origem
+        async function loadOrigemData() {
+            if (!fichaData.origem) return;
             
-            categorias.forEach(categoria => {
-                const lista = document.getElementById(`${categoria}-list`);
-                if (!lista) return;
-                
-                lista.innerHTML = '';
-                
-                let vantagensFiltradas = todasVantagens;
-                
-                if (categoria !== 'todas') {
-                    vantagensFiltradas = todasVantagens.filter(v => v.categoria === categoria);
+            try {
+                const origemDoc = await db.collection('origens').doc(fichaData.origem).get();
+                if (origemDoc.exists) {
+                    origemData = origemDoc.data();
                 }
+            } catch (error) {
+                console.error('Erro ao carregar origem:', error);
+            }
+        }
+
+        // Carregar perícias do Firebase
+        async function loadPericias() {
+            try {
+                const periciasList = document.getElementById('pericias-list');
+                periciasList.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando perícias...</div>';
+
+                const snapshot = await db.collection('pericias').get();
                 
-                if (vantagensFiltradas.length === 0) {
-                    lista.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">Nenhuma vantagem encontrada</div>';
+                if (snapshot.empty) {
+                    periciasList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Nenhuma perícia encontrada.</div>';
                     return;
                 }
+
+                // Processar perícias obrigatórias
+                processarPericiasObrigatorias();
+
+                // Agrupar perícias por atributo
+                const periciasPorAtributo = {};
                 
-                vantagensFiltradas.forEach(vantagem => {
-                    const item = document.createElement('div');
-                    item.className = 'advantage-item';
-                    item.setAttribute('data-codigo', vantagem.id);
-                    item.setAttribute('data-categoria', vantagem.categoria);
+                snapshot.forEach(doc => {
+                    const periciaName = doc.id;
+                    const periciaData = doc.data();
+                    const atributo = periciaData.atributo || 'Geral';
                     
-                    const temGraduacao = vantagem.graduacao === true || 
-                                       vantagem.graduacao === 'true' || 
-                                       vantagem.graduacao === 1;
-                    
-                    // Determinar se está selecionada e qual o valor
-                    let estaSelecionada = false;
-                    let graduacao = 0;
-                    
-                    if (temGraduacao) {
-                        estaSelecionada = vantagensGraduacao[vantagem.id] !== undefined;
-                        graduacao = vantagensGraduacao[vantagem.id] || 0;
-                    } else {
-                        estaSelecionada = vantagensSelecionadas[vantagem.id] !== undefined;
-                        graduacao = 0;
+                    if (!periciasPorAtributo[atributo]) {
+                        periciasPorAtributo[atributo] = [];
                     }
                     
-                    if (estaSelecionada) {
-                        item.classList.add('selected');
-                    }
+                    periciasPorAtributo[atributo].push({
+                        name: periciaName,
+                        ...periciaData
+                    });
+                });
+
+                // Renderizar perícias agrupadas por atributo
+                periciasList.innerHTML = '';
+                
+                Object.keys(periciasPorAtributo).sort().forEach(atributo => {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'pericia-category';
                     
-                    let controlsHTML = '';
-                    if (temGraduacao) {
-                        controlsHTML = `
-                            <div class="graduation-controls">
-                                <button class="graduation-btn decrease" data-codigo="${vantagem.id}">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <div class="graduation-value" id="grad-${vantagem.id}">${graduacao}</div>
-                                <button class="graduation-btn increase" data-codigo="${vantagem.id}">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        `;
-                    }
-                    
-                    item.innerHTML = `
-                        <div class="advantage-info">
-                            <div class="advantage-name">${vantagem.nome}</div>
-                            <div class="advantage-description">${vantagem.descricao}</div>
-                            <div class="advantage-category">${vantagem.categoria}</div>
-                        </div>
-                        ${controlsHTML}
+                    categoryDiv.innerHTML = `
+                        <div class="category-title">${atributo}</div>
                     `;
                     
-                    // Event listener para seleção
-                    item.addEventListener('click', (e) => {
-                        if (!e.target.classList.contains('graduation-btn')) {
-                            toggleVantagem(vantagem.id, temGraduacao);
+                    periciasPorAtributo[atributo].forEach(pericia => {
+                        const isObrigatoria = periciasObrigatorias.includes(pericia.name);
+                        const periciaItem = document.createElement('div');
+                        periciaItem.className = `pericia-item ${isObrigatoria ? 'selected' : ''}`;
+                        periciaItem.setAttribute('data-pericia', pericia.name);
+                        
+                        if (isObrigatoria) {
+                            periciaItem.style.background = 'rgba(255, 101, 132, 0.2)';
+                            periciaItem.style.border = '2px solid var(--secondary)';
                         }
+                        
+                        periciaItem.innerHTML = `
+                            <div class="pericia-checkbox ${isObrigatoria ? 'checked' : ''}"></div>
+                            <div class="pericia-info">
+                                <div class="pericia-name">
+                                    ${pericia.name}
+                                    ${isObrigatoria ? ' <span style="color: var(--secondary); font-size: 0.8rem;">(Obrigatória)</span>' : ''}
+                                </div>
+                                <div class="pericia-atributo">Atributo: ${pericia.atributo || 'Geral'}</div>
+                            </div>
+                        `;
+                        
+                        // Se for obrigatória, já marca como selecionada
+                        if (isObrigatoria) {
+                            selectedPericias.push(pericia.name);
+                        }
+                        
+                        periciaItem.addEventListener('click', () => {
+                            if (!isObrigatoria) { // Não permite desmarcar obrigatórias
+                                togglePericia(pericia.name, periciaItem);
+                            }
+                        });
+                        
+                        categoryDiv.appendChild(periciaItem);
                     });
                     
-                    // Event listeners para controles de graduação (apenas se tiver graduação)
-                    if (temGraduacao) {
-                        const increaseBtn = item.querySelector('.graduation-btn.increase');
-                        const decreaseBtn = item.querySelector('.graduation-btn.decrease');
-                        
-                        if (increaseBtn) {
-                            increaseBtn.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                aumentarGraduacao(vantagem.id);
-                            });
-                        }
-                        
-                        if (decreaseBtn) {
-                            decreaseBtn.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                diminuirGraduacao(vantagem.id);
-                            });
-                        }
-                    }
-                    
-                    lista.appendChild(item);
+                    periciasList.appendChild(categoryDiv);
                 });
-            });
-        }
 
-        // Alternar seleção de vantagem
-        function toggleVantagem(codigo, temGraduacao) {
-            console.log(`Toggle vantagem: ${codigo}, graduação: ${temGraduacao}`);
-            
-            if (temGraduacao) {
-                // Vantagem COM graduação
-                if (vantagensGraduacao[codigo] !== undefined) {
-                    // Remover vantagem com graduação
-                    const graduacaoAtual = vantagensGraduacao[codigo];
-                    ppTotal -= (1 + (graduacaoAtual - 1)); // Remove PP base + graduações
-                    delete vantagensGraduacao[codigo];
-                } else {
-                    // Adicionar vantagem com graduação
-                    vantagensGraduacao[codigo] = 1; // Começa com graduação 1
-                    ppTotal += 1; // PP da primeira graduação (inclui PP base)
-                }
-            } else {
-                // Vantagem SEM graduação
-                if (vantagensSelecionadas[codigo] !== undefined) {
-                    // Remover vantagem sem graduação
-                    ppTotal -= 1;
-                    delete vantagensSelecionadas[codigo];
-                } else {
-                    // Adicionar vantagem sem graduação
-                    vantagensSelecionadas[codigo] = 0; // 0 indica sem graduação
-                    ppTotal += 1;
-                }
-            }
-            
-            atualizarInterface();
-            salvarProgresso();
-        }
-
-        // Aumentar graduação
-        function aumentarGraduacao(codigo) {
-            if (vantagensGraduacao[codigo] !== undefined) {
-                vantagensGraduacao[codigo]++;
-                ppTotal += 1; // Cada graduação adicional adiciona 1 PP
-                atualizarInterface();
-                salvarProgresso();
-            }
-        }
-
-        // Diminuir graduação
-        function diminuirGraduacao(codigo) {
-            if (vantagensGraduacao[codigo] !== undefined) {
-                if (vantagensGraduacao[codigo] > 1) {
-                    vantagensGraduacao[codigo]--;
-                    ppTotal -= 1; // Cada graduação removida subtrai 1 PP
-                    atualizarInterface();
-                    salvarProgresso();
-                } else if (vantagensGraduacao[codigo] === 1) {
-                    // Remove a vantagem se chegar a 0
-                    delete vantagensGraduacao[codigo];
-                    ppTotal -= 1; // Remove PP da primeira graduação
-                    atualizarInterface();
-                    salvarProgresso();
-                }
-            }
-        }
-
-        // Atualizar toda a interface
-        function atualizarInterface() {
-            atualizarContadorPP();
-            atualizarVantagensSelecionadas();
-            renderizarVantagens();
-        }
-
-        // Atualizar lista de vantagens selecionadas
-        function atualizarVantagensSelecionadas() {
-            const selectedContainer = document.getElementById('selected-advantages');
-            const selectedList = document.getElementById('selected-list');
-            selectedList.innerHTML = '';
-            
-            const totalVantagens = Object.keys(vantagensSelecionadas).length + Object.keys(vantagensGraduacao).length;
-            
-            if (totalVantagens === 0) {
-                selectedContainer.style.display = 'none';
-                return;
-            }
-            
-            selectedContainer.style.display = 'block';
-            
-            // Mostrar vantagens SEM graduação
-            for (const [codigo] of Object.entries(vantagensSelecionadas)) {
-                const vantagem = todasVantagens.find(v => v.id === codigo);
-                const nome = vantagem ? vantagem.nome : codigo;
-                
-                const item = document.createElement('div');
-                item.className = 'selected-item';
-                item.textContent = nome;
-                item.setAttribute('data-codigo', codigo);
-                item.setAttribute('data-tipo', 'sem-graduacao');
-                
-                // Adicionar evento de clique para remover
-                item.addEventListener('click', () => {
-                    removerVantagemSelecionada(codigo, false);
-                });
-                
-                selectedList.appendChild(item);
-            }
-            
-            // Mostrar vantagens COM graduação
-            for (const [codigo, graduacao] of Object.entries(vantagensGraduacao)) {
-                const vantagem = todasVantagens.find(v => v.id === codigo);
-                const nome = vantagem ? vantagem.nome : codigo;
-                
-                const item = document.createElement('div');
-                item.className = 'selected-item';
-                item.innerHTML = `${nome} <span class="graduation">${graduacao}</span>`;
-                item.setAttribute('data-codigo', codigo);
-                item.setAttribute('data-tipo', 'com-graduacao');
-                
-                // Adicionar evento de clique para remover
-                item.addEventListener('click', () => {
-                    removerVantagemSelecionada(codigo, true);
-                });
-                
-                selectedList.appendChild(item);
-            }
-        }
-
-        // Remover vantagem clicando na lista de selecionadas
-        function removerVantagemSelecionada(codigo, temGraduacao) {
-            console.log(`Removendo vantagem da lista: ${codigo}, graduação: ${temGraduacao}`);
-            
-            if (temGraduacao) {
-                // Remover vantagem COM graduação
-                const graduacaoAtual = vantagensGraduacao[codigo];
-                ppTotal -= (1 + (graduacaoAtual - 1)); // Remove PP base + graduações
-                delete vantagensGraduacao[codigo];
-            } else {
-                // Remover vantagem SEM graduação
-                ppTotal -= 1;
-                delete vantagensSelecionadas[codigo];
-            }
-            
-            atualizarInterface();
-            salvarProgresso();
-        }
-
-        // Atualizar contador de PP
-        function atualizarContadorPP() {
-            document.getElementById('pp-value').textContent = ppTotal;
-        }
-
-        // Salvar com estrutura correta
-        async function salvarEstruturaCorreta() {
-            const updateData = {
-                vantagens: vantagensSelecionadas,        // Vantagens SEM graduação
-                vantagensGraduacao: vantagensGraduacao,  // Vantagens COM graduação
-                pp: ppTotal,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            await db.collection('fichas').doc(currentFichaId).update(updateData);
-            console.log('Estrutura salva corretamente:', updateData);
-        }
-
-        // Salvar progresso automaticamente
-        async function salvarProgresso() {
-            try {
-                await salvarEstruturaCorreta();
-                console.log('Progresso salvo com sucesso');
             } catch (error) {
-                console.error('Erro ao salvar progresso:', error);
-                throw error;
+                console.error('Erro ao carregar perícias:', error);
+                showMessage('Erro ao carregar perícias. Tente novamente.', 'error');
             }
         }
 
-        // Sistema de busca
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', function(e) {
-                const termo = e.target.value.toLowerCase().trim();
+        // Processar perícias obrigatórias do arquétipo e origem
+        function processarPericiasObrigatorias() {
+            periciasObrigatorias = [];
+
+            // Adicionar perícias fixas do arquétipo
+            if (arquetipoData && arquetipoData.periciasFixas) {
+                if (Array.isArray(arquetipoData.periciasFixas)) {
+                    periciasObrigatorias.push(...arquetipoData.periciasFixas);
+                } else if (typeof arquetipoData.periciasFixas === 'string') {
+                    periciasObrigatorias.push(arquetipoData.periciasFixas);
+                }
+            }
+
+            // Adicionar perícia fixa da origem
+            if (origemData && origemData.periciaFixa) {
+                periciasObrigatorias.push(origemData.periciaFixa);
+            }
+
+            // Mostrar informações obrigatórias
+            if (periciasObrigatorias.length > 0) {
+                const obrigatoriasInfo = document.getElementById('obrigatorias-info');
+                const obrigatoriasList = document.getElementById('obrigatorias-list');
                 
-                document.querySelectorAll('.advantage-item').forEach(item => {
-                    const nome = item.querySelector('.advantage-name').textContent.toLowerCase();
-                    const descricao = item.querySelector('.advantage-description').textContent.toLowerCase();
-                    
-                    const corresponde = nome.includes(termo) || descricao.includes(termo);
-                    item.style.display = corresponde ? 'flex' : 'none';
-                });
-            });
+                obrigatoriasInfo.style.display = 'block';
+                obrigatoriasList.innerHTML = periciasObrigatorias.map(pericia => 
+                    `<div class="obrigatoria-item">${pericia}</div>`
+                ).join('');
+            }
         }
 
-        // Sistema de abas
-        function setupNavigation() {
-            const tabs = document.querySelectorAll('.category-tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const targetCategory = tab.getAttribute('data-category');
-                    switchCategory(targetCategory);
-                });
-            });
+        // Alternar seleção de perícia
+        function togglePericia(periciaName, element) {
+            const checkbox = element.querySelector('.pericia-checkbox');
+            const index = selectedPericias.indexOf(periciaName);
             
-            document.getElementById('back-to-atributos').addEventListener('click', async () => {
-                try {
-                    await salvarProgresso();
-                    window.location.href = `criarficha3.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
-                } catch (error) {
-                    console.error('Erro ao salvar antes de voltar:', error);
-                    window.location.href = `criarficha3.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
-                }
+            if (index > -1) {
+                // Remover da seleção
+                selectedPericias.splice(index, 1);
+                element.classList.remove('selected');
+                checkbox.classList.remove('checked');
+            } else {
+                // Adicionar à seleção
+                selectedPericias.push(periciaName);
+                element.classList.add('selected');
+                checkbox.classList.add('checked');
+            }
+        }
+
+        // Navegação
+        function setupNavigation() {
+            document.getElementById('back-to-origem').addEventListener('click', async () => {
+                // Salvar antes de voltar
+                await savePericias();
+                window.location.href = `criarficha3.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
             });
             
             document.getElementById('avancar-ficha').addEventListener('click', saveAndContinue);
         }
 
-        function switchCategory(categoryName) {
-            // Esconder todas as categorias
-            document.querySelectorAll('.category-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Mostrar categoria selecionada
-            document.getElementById(`${categoryName}-content`).classList.add('active');
-            document.querySelector(`[data-category="${categoryName}"]`).classList.add('active');
-            
-            // Limpar busca ao mudar de categoria
-            document.getElementById('searchInput').value = '';
-            document.querySelectorAll('.advantage-item').forEach(item => {
-                item.style.display = 'flex';
-            });
+        // Salvar perícias
+        async function savePericias() {
+            try {
+                const updateData = {
+                    pericias: selectedPericias,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('fichas').doc(currentFichaId).update(updateData);
+                return true;
+            } catch (error) {
+                console.error('Erro ao salvar perícias:', error);
+                return false;
+            }
         }
 
         // Salvar e continuar
@@ -1094,25 +651,22 @@
                 avancarBtn.disabled = true;
                 avancarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
-                const updateData = {
-                    vantagens: vantagensSelecionadas,
-                    vantagensGraduacao: vantagensGraduacao,
-                    pp: ppTotal,
-                    etapaCriacao: 4,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+                const success = await savePericias();
+                
+                if (success) {
+                    showMessage('Perícias salvas com sucesso! Avançando...', 'success');
 
-                await db.collection('fichas').doc(currentFichaId).update(updateData);
-
-                showMessage('Vantagens salvas com sucesso! Avançando...', 'success');
-
-                setTimeout(() => {
-                    window.location.href = `criarficha5.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
-                }, 2000);
+                    // Redirecionar para próxima etapa
+                    setTimeout(() => {
+                        window.location.href = `criarficha5.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
+                    }, 2000);
+                } else {
+                    throw new Error('Falha ao salvar');
+                }
 
             } catch (error) {
-                console.error('Erro ao salvar vantagens:', error);
-                showMessage('Erro ao salvar vantagens. Tente novamente.', 'error');
+                console.error('Erro ao salvar perícias:', error);
+                showMessage('Erro ao salvar perícias. Tente novamente.', 'error');
                 
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = false;
