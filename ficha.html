@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supernova RPG - Ficha do Personagem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5a52d5;
+            --secondary: #FF6584;
+            --dark: #2A2D3E;
+            --darker: #1F2232;
+            --light: #F5F5F7;
+            --success: #4CAF50;
+            --error: #f44336;
+            --warning: #ff9800;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .back-btn {
+            background: rgba(108, 99, 255, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+        }
+
+        /* Cabeçalho da Ficha */
+        .ficha-header {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .ficha-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Layout Principal */
+        .ficha-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+        }
+
+        /* Painel de Atributos (Desktop) */
+        .atributos-panel {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .panel-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .edit-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .bar-container {
+            margin: 15px 0;
+        }
+
+        .bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .bar-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .bar-values {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .bar {
+            height: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .bar-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .bar-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--light);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .bar-btn:hover {
+            background: var(--primary);
+        }
+
+        .defense-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .defense-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .defense-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .defense-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Lista de Perícias */
+        .pericias-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .pericia-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pericia-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .pericia-name {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .pericia-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 30px;
+            text-align: center;
+            padding: 2px 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        /* Painéis Direitos */
+        .right-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-tabs {
+            display: flex;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .panel-content {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        /* Habilidades */
+        .habilidades-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .habilidade-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .habilidade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .habilidade-nome {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .habilidade-descricao {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Inventário */
+        .inventario-categorias {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .categoria-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .categoria-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .itens-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .item-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid var(--secondary);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .item-nome {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .item-categoria {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .item-detalhes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .item-detalhe {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .item-detalhe strong {
+            color: var(--primary);
+        }
+
+        .item-descricao {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+
+        /* Informações */
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-section-title {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .info-textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--light);
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .info-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--darker);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 10px;
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Valor de Perícia */
+        .valor-options {
+            display: flex;
+            gap: 5px;
+        }
+
+        .valor-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .valor-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Mobile */
+        .mobile-only {
+            display: none;
+        }
+
+        .mobile-tabs {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .ficha-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .atributos-panel {
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            .desktop-only {
+                display: none;
+            }
+            
+            .mobile-only {
+                display: block;
+            }
+            
+            .mobile-tabs {
+                display: flex;
+                background: var(--glass);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                overflow-x: auto;
+                margin-bottom: 20px;
+            }
+            
+            .mobile-tab {
+                flex: 1;
+                min-width: 120px;
+                padding: 15px 10px;
+                text-align: center;
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.7);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 0.8rem;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            
+            .mobile-tab.active {
+                background: var(--primary);
+                color: white;
+            }
+            
+            .ficha-header {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .defense-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .item-detalhes {
+                grid-template-columns: 1fr;
+            }
+            
+            .ficha-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid var(--success);
+            color: #a5d6a7;
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid var(--error);
+            color: #ef9a9a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                <h1>SUPERNOVA RPG</h1>
+            </div>
+            <a href="fichas.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Voltar para Fichas
+            </a>
+        </header>
+
+        <div class="message" id="message"></div>
+
+        <!-- Cabeçalho da Ficha -->
+        <div class="ficha-header">
+            <div class="ficha-info">
+                <div class="info-item">
+                    <div class="info-label">Nome do Herói</div>
+                    <div class="info-value" id="hero-name">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Alter Ego</div>
+                    <div class="info-value" id="alter-ego">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nome do Jogador</div>
+                    <div class="info-value" id="player-name">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Origem</div>
+                    <div class="info-value" id="origem">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Arquétipo</div>
+                    <div class="info-value" id="arquetipo">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Mobile -->
+        <div class="mobile-tabs mobile-only">
+            <button class="mobile-tab active" data-tab="atributos">Atributos</button>
+            <button class="mobile-tab" data-tab="habilidades">Habilidades</button>
+            <button class="mobile-tab" data-tab="inventario">Inventário</button>
+            <button class="mobile-tab" data-tab="informacoes">Informações</button>
+        </div>
+
+        <div class="ficha-container">
+            <!-- Painel de Atributos (Desktop) -->
+            <div class="atributos-panel desktop-only">
+                <div class="panel-section">
+                    <div class="section-title">
+                        Atributos
+                        <button class="edit-btn" id="edit-atributos">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-label">Nível</div>
+                        <div class="stat-value" id="nivel-value">1</div>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-label">Deslocamento</div>
+                        <div class="stat-value" id="deslocamento-value">9m</div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="section-title">Pontos de Vida</div>
+                    <div class="bar-container">
+                        <div class="bar-header">
+                            <div class="bar-label">Vida</div>
+                            <div class="bar-values">
+                                <span id="vida-atual">10</span> / <span id="vida-maxima">10</span>
+                            </div>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" id="vida-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="bar-controls">
+                            <button class="bar-btn" id="vida-minus">-</button>
+                            <button class="bar-btn" id="vida-plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="section-title">Pontos de Esforço</div>
+                    <div class="bar-container">
+                        <div class="bar-header">
+                            <div class="bar-label">Esforço</div>
+                            <div class="bar-values">
+                                <span id="esforco-atual">5</span> / <span id="esforco-maximo">5</span>
+                            </div>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" id="esforco-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="bar-controls">
+                            <button class="bar-btn" id="esforco-minus">-</button>
+                            <button class="bar-btn" id="esforco-plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="section-title">Defesas</div>
+                    <div class="defense-grid">
+                        <div class="defense-item">
+                            <div class="defense-label">Defesa</div>
+                            <div class="defense-value" id="defesa-value">10</div>
+                        </div>
+                        <div class="defense-item">
+                            <div class="defense-label">Esquiva</div>
+                            <div class="defense-value" id="esquiva-value">10</div>
+                        </div>
+                        <div class="defense-item">
+                            <div class="defense-label">Bloqueio</div>
+                            <div class="defense-value" id="bloqueio-value">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="section-title">Perícias</div>
+                    <div class="pericias-list" id="pericias-list">
+                        <!-- Perícias serão carregadas aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painéis Direitos -->
+            <div class="right-panels">
+                <!-- Tabs Desktop -->
+                <div class="panel-tabs desktop-only">
+                    <button class="tab active" data-tab="habilidades">Habilidades</button>
+                    <button class="tab" data-tab="inventario">Inventário</button>
+                    <button class="tab" data-tab="informacoes">Informações</button>
+                </div>
+
+                <!-- Conteúdo dos Painéis -->
+                <div class="panel-content">
+                    <!-- Habilidades -->
+                    <div class="panel-tab-content active" id="habilidades-content">
+                        <div class="section-title">Habilidades do Personagem</div>
+                        <div class="habilidades-list" id="habilidades-list">
+                            <!-- Habilidades serão carregadas aqui -->
+                        </div>
+                        <button class="add-btn" id="add-habilidade">
+                            <i class="fas fa-plus"></i> Adicionar Habilidade
+                        </button>
+                    </div>
+
+                    <!-- Inventário -->
+                    <div class="panel-tab-content" id="inventario-content">
+                        <div class="section-title">Inventário</div>
+                        <div class="inventario-categorias">
+                            <button class="categoria-btn active" data-categoria="todas">Todas</button>
+                            <button class="categoria-btn" data-categoria="arma">Armas</button>
+                            <button class="categoria-btn" data-categoria="protecao">Proteção</button>
+                            <button class="categoria-btn" data-categoria="acessorio">Acessórios</button>
+                            <button class="categoria-btn" data-categoria="geral">Geral</button>
+                        </div>
+                        <div class="itens-list" id="itens-list">
+                            <!-- Itens serão carregados aqui -->
+                        </div>
+                        <button class="add-btn" id="add-item">
+                            <i class="fas fa-plus"></i> Adicionar Item
+                        </button>
+                    </div>
+
+                    <!-- Informações -->
+                    <div class="panel-tab-content" id="informacoes-content">
+                        <div class="info-section">
+                            <div class="info-section-title">Individualidade</div>
+                            <textarea class="info-textarea" id="individualidade-text" placeholder="Descreva a individualidade do seu personagem..."></textarea>
+                        </div>
+                        <div class="info-section">
+                            <div class="info-section-title">Aparência</div>
+                            <textarea class="info-textarea" id="aparencia-text" placeholder="Descreva a aparência do seu personagem..."></textarea>
+                        </div>
+                        <div class="info-section">
+                            <div class="info-section-title">Personalidade</div>
+                            <textarea class="info-textarea" id="personalidade-text" placeholder="Descreva a personalidade do seu personagem..."></textarea>
+                        </div>
+                        <div class="info-section">
+                            <div class="info-section-title">História</div>
+                            <textarea class="info-textarea" id="historia-text" placeholder="Descreva a história do seu personagem..."></textarea>
+                        </div>
+                        <div class="info-section">
+                            <div class="info-section-title">Ambientes</div>
+                            <textarea class="info-textarea" id="ambientes-text" placeholder="Descreva os ambientes do seu personagem..."></textarea>
+                        </div>
+                        <button class="add-btn" id="save-info">
+                            <i class="fas fa-save"></i> Salvar Informações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Perícia -->
+    <div class="modal" id="pericia-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="pericia-modal-title">Editar Perícia</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="valor-options">
+                <div class="valor-option" data-value="0">0 (Destreinada)</div>
+                <div class="valor-option" data-value="5">5</div>
+                <div class="valor-option" data-value="10">10</div>
+                <div class="valor-option" data-value="15">15</div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancel-pericia">Cancelar</button>
+                <button class="btn btn-primary" id="save-pericia">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar Habilidade -->
+    <div class="modal" id="habilidade-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Nova Habilidade</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nome da Habilidade</label>
+                <input type="text" class="form-input" id="habilidade-nome" placeholder="Nome da habilidade">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Descrição</label>
+                <textarea class="form-textarea" id="habilidade-descricao" placeholder="Descreva a habilidade..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancel-habilidade">Cancelar</button>
+                <button class="btn btn-primary" id="save-habilidade">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar Item -->
+    <div class="modal" id="item-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Novo Item</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Categoria</label>
+                <select class="form-select" id="item-categoria">
+                    <option value="arma">Arma</option>
+                    <option value="protecao">Proteção</option>
+                    <option value="acessorio">Acessório</option>
+                    <option value="geral">Geral</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nome do Item</label>
+                <input type="text" class="form-input" id="item-nome" placeholder="Nome do item">
+            </div>
+            <div id="arma-fields">
+                <div class="form-group">
+                    <label class="form-label">Alcance</label>
+                    <input type="text" class="form-input" id="item-alcance" placeholder="Ex: Curto, Médio, Longo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dano</label>
+                    <input type="text" class="form-input" id="item-dano" placeholder="Ex: 1d6, 2d4">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Crítico</label>
+                    <input type="text" class="form-input" id="item-critico" placeholder="Ex: 19-20/x2">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo de Dano</label>
+                    <input type="text" class="form-input" id="item-tipo-dano" placeholder="Ex: Cortante, Perfurante">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Espaços</label>
+                <input type="number" class="form-input" id="item-espacos" placeholder="0" min="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Propriedades/Descrição</label>
+                <textarea class="form-textarea" id="item-descricao" placeholder="Descreva as propriedades do item..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancel-item">Cancelar</button>
+                <button class="btn btn-primary" id="save-item">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzdrAtJoBUONdyHsEPrzWDTH9FMg1xW78",
+            authDomain: "supernova-372bf.firebaseapp.com",
+            projectId: "supernova-372bf",
+            storageBucket: "supernova-372bf.firebasestorage.app",
+            messagingSenderId: "917055386010",
+            appId: "1:917055386010:web:3f27d9173e3dd7fbdf8a23"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Variáveis globais
+        let currentUser = null;
+        let currentFichaId = null;
+        let fichaData = null;
+        let currentEditingPericia = null;
+
+        // Lista de perícias padrão
+        const periciasPadrao = [
+            "Acrobacia", "Adestramento", "Artes", "Atletismo", "Atualidades",
+            "Ciências", "Crime", "Diplomacia", "Enganação", "Fortitude",
+            "Furtividade", "Iniciativa", "Intimidação", "Intuição", "Investigação",
+            "Luta", "Medicina", "Ocultismo", "Percepção", "Pilotagem",
+            "Pontaria", "Profissão", "Reflexos", "Religião", "Sobrevivência",
+            "Tática", "Tecnologia", "Vontade"
+        ];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            
+            // Verificar autenticação e parâmetros
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    currentUser = user;
+                    const urlParams = new URLSearchParams(window.location.search);
+                    currentFichaId = urlParams.get('fichaId');
+                    
+                    if (!currentFichaId) {
+                        showMessage('Parâmetros inválidos. Redirecionando...', 'error');
+                        setTimeout(() => {
+                            window.location.href = 'fichas.html';
+                        }, 2000);
+                    } else {
+                        loadFichaData();
+                    }
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Tabs desktop
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Tabs mobile
+            document.querySelectorAll('.mobile-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    switchMobileTab(tabName);
+                });
+            });
+
+            // Controles de vida
+            document.getElementById('vida-minus').addEventListener('click', () => adjustVida(-1));
+            document.getElementById('vida-plus').addEventListener('click', () => adjustVida(1));
+
+            // Controles de esforço
+            document.getElementById('esforco-minus').addEventListener('click', () => adjustEsforco(-1));
+            document.getElementById('esforco-plus').addEventListener('click', () => adjustEsforco(1));
+
+            // Botões de adicionar
+            document.getElementById('add-habilidade').addEventListener('click', () => openHabilidadeModal());
+            document.getElementById('add-item').addEventListener('click', () => openItemModal());
+            document.getElementById('save-info').addEventListener('click', saveInformacoes);
+
+            // Modal de perícia
+            document.querySelectorAll('.valor-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.valor-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            document.getElementById('save-pericia').addEventListener('click', savePericia);
+            document.getElementById('cancel-pericia').addEventListener('click', closePericiaModal);
+
+            // Modal de habilidade
+            document.getElementById('save-habilidade').addEventListener('click', saveHabilidade);
+            document.getElementById('cancel-habilidade').addEventListener('click', closeHabilidadeModal);
+
+            // Modal de item
+            document.getElementById('save-item').addEventListener('click', saveItem);
+            document.getElementById('cancel-item').addEventListener('click', closeItemModal);
+
+            // Categorias de inventário
+            document.querySelectorAll('.categoria-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoria = this.getAttribute('data-categoria');
+                    filterInventario(categoria);
+                });
+            });
+
+            // Fechar modais
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').classList.remove('active');
+                });
+            });
+
+            // Mostrar campos de arma dinamicamente
+            document.getElementById('item-categoria').addEventListener('change', function() {
+                const armaFields = document.getElementById('arma-fields');
+                if (this.value === 'arma') {
+                    armaFields.style.display = 'block';
+                } else {
+                    armaFields.style.display = 'none';
+                }
+            });
+        }
+
+        // Carregar dados da ficha
+        async function loadFichaData() {
+            try {
+                const fichaDoc = await db.collection('fichas').doc(currentFichaId).get();
+                if (fichaDoc.exists) {
+                    fichaData = fichaDoc.data();
+                    updateFichaDisplay();
+                    loadPericias();
+                    loadHabilidades();
+                    loadInventario();
+                } else {
+                    showMessage('Ficha não encontrada.', 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados da ficha:', error);
+                showMessage('Erro ao carregar dados da ficha.', 'error');
+            }
+        }
+
+        // Atualizar display da ficha
+        function updateFichaDisplay() {
+            // Cabeçalho
+            document.getElementById('hero-name').textContent = fichaData.nomeHeroi || '-';
+            document.getElementById('alter-ego').textContent = fichaData.alterEgo || '-';
+            document.getElementById('player-name').textContent = fichaData.nomeJogador || '-';
+            document.getElementById('origem').textContent = fichaData.origem || '-';
+            document.getElementById('arquetipo').textContent = fichaData.arquetipo || '-';
+
+            // Atributos
+            document.getElementById('vida-atual').textContent = fichaData.pontosVida || 0;
+            document.getElementById('vida-maxima').textContent = fichaData.pontosVidaMax || 0;
+            document.getElementById('esforco-atual').textContent = fichaData.pontosEsforco || 0;
+            document.getElementById('esforco-maximo').textContent = fichaData.pontosEsforcoMax || 0;
+
+            // Atualizar barras
+            updateBarras();
+
+            // Defesas
+            const agi = fichaData.atributos?.AGI || 0;
+            const defesa = 10 + agi;
+            document.getElementById('defesa-value').textContent = defesa;
+
+            // Calcular esquiva e bloqueio baseado nas perícias
+            calcularDefesas();
+
+            // Informações
+            if (fichaData.informacoes) {
+                document.getElementById('individualidade-text').value = fichaData.informacoes.individualidade || '';
+                document.getElementById('aparencia-text').value = fichaData.informacoes.aparencia || '';
+                document.getElementById('personalidade-text').value = fichaData.informacoes.personalidade || '';
+                document.getElementById('historia-text').value = fichaData.informacoes.historia || '';
+                document.getElementById('ambientes-text').value = fichaData.informacoes.ambientes || '';
+            }
+        }
+
+        // Atualizar barras de vida e esforço
+        function updateBarras() {
+            const vidaAtual = fichaData.pontosVida || 0;
+            const vidaMax = fichaData.pontosVidaMax || 1;
+            const esforcoAtual = fichaData.pontosEsforco || 0;
+            const esforcoMax = fichaData.pontosEsforcoMax || 1;
+
+            document.getElementById('vida-bar').style.width = `${(vidaAtual / vidaMax) * 100}%`;
+            document.getElementById('esforco-bar').style.width = `${(esforcoAtual / esforcoMax) * 100}%`;
+        }
+
+        // Calcular defesas (Esquiva e Bloqueio)
+        function calcularDefesas() {
+            const defesa = parseInt(document.getElementById('defesa-value').textContent);
+            let esquiva = defesa;
+            let bloqueio = 0;
+
+            // Verificar se tem Reflexos treinado para Esquiva
+            if (fichaData.pericias) {
+                const reflexos = fichaData.pericias.find(p => p.nome === 'Reflexos');
+                if (reflexos && reflexos.valor > 0) {
+                    esquiva += reflexos.valor;
+                }
+
+                // Verificar se tem Fortitude treinado para Bloqueio
+                const fortitude = fichaData.pericias.find(p => p.nome === 'Fortitude');
+                if (fortitude && fortitude.valor > 0) {
+                    bloqueio = fortitude.valor;
+                }
+            }
+
+            document.getElementById('esquiva-value').textContent = esquiva;
+            document.getElementById('bloqueio-value').textContent = bloqueio;
+        }
+
+        // Carregar perícias
+        function loadPericias() {
+            const periciasList = document.getElementById('pericias-list');
+            periciasList.innerHTML = '';
+
+            periciasPadrao.forEach(periciaNome => {
+                const periciaItem = document.createElement('div');
+                periciaItem.className = 'pericia-item';
+                
+                // Encontrar valor da perícia se existir
+                let valor = 0;
+                if (fichaData.pericias) {
+                    const pericia = fichaData.pericias.find(p => p.nome === periciaNome);
+                    valor = pericia ? pericia.valor : 0;
+                }
+
+                periciaItem.innerHTML = `
+                    <div class="pericia-name">${periciaNome}</div>
+                    <div class="pericia-value">${valor}</div>
+                `;
+
+                periciaItem.addEventListener('click', () => openPericiaModal(periciaNome, valor));
+                periciasList.appendChild(periciaItem);
+            });
+        }
+
+        // Carregar habilidades
+        async function loadHabilidades() {
+            try {
+                const habilidadesList = document.getElementById('habilidades-list');
+                habilidadesList.innerHTML = '';
+
+                // Carregar habilidades da origem
+                if (fichaData.origem) {
+                    const origemDoc = await db.collection('origens').doc(fichaData.origem).get();
+                    if (origemDoc.exists) {
+                        const origemData = origemDoc.data();
+                        if (origemData.habilidade) {
+                            const habilidadeItem = document.createElement('div');
+                            habilidadeItem.className = 'habilidade-item';
+                            habilidadeItem.innerHTML = `
+                                <div class="habilidade-header">
+                                    <div class="habilidade-nome">${origemData.habilidade.nome || 'Habilidade da Origem'}</div>
+                                </div>
+                                <div class="habilidade-descricao">${origemData.habilidade.descricao || ''}</div>
+                            `;
+                            habilidadesList.appendChild(habilidadeItem);
+                        }
+                    }
+                }
+
+                // Carregar habilidades personalizadas
+                if (fichaData.habilidades) {
+                    fichaData.habilidades.forEach(habilidade => {
+                        const habilidadeItem = document.createElement('div');
+                        habilidadeItem.className = 'habilidade-item';
+                        habilidadeItem.innerHTML = `
+                            <div class="habilidade-header">
+                                <div class="habilidade-nome">${habilidade.nome}</div>
+                            </div>
+                            <div class="habilidade-descricao">${habilidade.descricao}</div>
+                        `;
+                        habilidadesList.appendChild(habilidadeItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar habilidades:', error);
+            }
+        }
+
+        // Carregar inventário
+        function loadInventario() {
+            const itensList = document.getElementById('itens-list');
+            itensList.innerHTML = '';
+
+            if (fichaData.inventario) {
+                fichaData.inventario.forEach(item => {
+                    const itemCard = createItemCard(item);
+                    itensList.appendChild(itemCard);
+                });
+            }
+        }
+
+        // Criar card de item
+        function createItemCard(item) {
+            const itemCard = document.createElement('div');
+            itemCard.className = 'item-card';
+            
+            let detalhesHTML = '';
+            if (item.categoria === 'arma') {
+                detalhesHTML = `
+                    <div class="item-detalhe"><strong>Alcance:</strong> ${item.alcance || '-'}</div>
+                    <div class="item-detalhe"><strong>Dano:</strong> ${item.dano || '-'}</div>
+                    <div class="item-detalhe"><strong>Crítico:</strong> ${item.critico || '-'}</div>
+                    <div class="item-detalhe"><strong>Tipo:</strong> ${item.tipoDano || '-'}</div>
+                `;
+            }
+            
+            itemCard.innerHTML = `
+                <div class="item-header">
+                    <div class="item-nome">${item.nome}</div>
+                    <div class="item-categoria">${item.categoria}</div>
+                </div>
+                <div class="item-detalhes">
+                    ${detalhesHTML}
+                    <div class="item-detalhe"><strong>Espaços:</strong> ${item.espacos || 0}</div>
+                </div>
+                <div class="item-descricao">${item.descricao || ''}</div>
+            `;
+            
+            return itemCard;
+        }
+
+        // Ajustar vida
+        function adjustVida(change) {
+            let vidaAtual = parseInt(document.getElementById('vida-atual').textContent);
+            const vidaMax = parseInt(document.getElementById('vida-maxima').textContent);
+            
+            vidaAtual += change;
+            vidaAtual = Math.max(0, Math.min(vidaAtual, vidaMax));
+            
+            document.getElementById('vida-atual').textContent = vidaAtual;
+            updateBarras();
+            saveVidaEsforco();
+        }
+
+        // Ajustar esforço
+        function adjustEsforco(change) {
+            let esforcoAtual = parseInt(document.getElementById('esforco-atual').textContent);
+            const esforcoMax = parseInt(document.getElementById('esforco-maximo').textContent);
+            
+            esforcoAtual += change;
+            esforcoAtual = Math.max(0, Math.min(esforcoAtual, esforcoMax));
+            
+            document.getElementById('esforco-atual').textContent = esforcoAtual;
+            updateBarras();
+            saveVidaEsforco();
+        }
+
+        // Abrir modal de perícia
+        function openPericiaModal(nome, valorAtual) {
+            currentEditingPericia = nome;
+            document.getElementById('pericia-modal-title').textContent = `Editar ${nome}`;
+            
+            // Selecionar valor atual
+            document.querySelectorAll('.valor-option').forEach(option => {
+                option.classList.remove('selected');
+                if (parseInt(option.getAttribute('data-value')) === valorAtual) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            document.getElementById('pericia-modal').classList.add('active');
+        }
+
+        // Fechar modal de perícia
+        function closePericiaModal() {
+            document.getElementById('pericia-modal').classList.remove('active');
+            currentEditingPericia = null;
+        }
+
+        // Salvar perícia
+        async function savePericia() {
+            const selectedOption = document.querySelector('.valor-option.selected');
+            if (!selectedOption) return;
+
+            const novoValor = parseInt(selectedOption.getAttribute('data-value'));
+
+            try {
+                // Atualizar array de perícias
+                let pericias = fichaData.pericias || [];
+                const periciaIndex = pericias.findIndex(p => p.nome === currentEditingPericia);
+                
+                if (periciaIndex !== -1) {
+                    pericias[periciaIndex].valor = novoValor;
+                } else {
+                    pericias.push({ nome: currentEditingPericia, valor: novoValor });
+                }
+
+                await db.collection('fichas').doc(currentFichaId).update({
+                    pericias: pericias,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Atualizar dados locais
+                fichaData.pericias = pericias;
+                loadPericias();
+                calcularDefesas();
+                closePericiaModal();
+                showMessage('Perícia atualizada com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao salvar perícia:', error);
+                showMessage('Erro ao salvar perícia.', 'error');
+            }
+        }
+
+        // Abrir modal de habilidade
+        function openHabilidadeModal() {
+            document.getElementById('habilidade-nome').value = '';
+            document.getElementById('habilidade-descricao').value = '';
+            document.getElementById('habilidade-modal').classList.add('active');
+        }
+
+        // Fechar modal de habilidade
+        function closeHabilidadeModal() {
+            document.getElementById('habilidade-modal').classList.remove('active');
+        }
+
+        // Salvar habilidade
+        async function saveHabilidade() {
+            const nome = document.getElementById('habilidade-nome').value.trim();
+            const descricao = document.getElementById('habilidade-descricao').value.trim();
+
+            if (!nome) {
+                showMessage('Por favor, insira um nome para a habilidade.', 'error');
+                return;
+            }
+
+            try {
+                const novaHabilidade = { nome, descricao };
+                let habilidades = fichaData.habilidades || [];
+                habilidades.push(novaHabilidade);
+
+                await db.collection('fichas').doc(currentFichaId).update({
+                    habilidades: habilidades,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Atualizar dados locais
+                fichaData.habilidades = habilidades;
+                loadHabilidades();
+                closeHabilidadeModal();
+                showMessage('Habilidade adicionada com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao salvar habilidade:', error);
+                showMessage('Erro ao salvar habilidade.', 'error');
+            }
+        }
+
+        // Abrir modal de item
+        function openItemModal() {
+            document.getElementById('item-categoria').value = 'arma';
+            document.getElementById('item-nome').value = '';
+            document.getElementById('item-alcance').value = '';
+            document.getElementById('item-dano').value = '';
+            document.getElementById('item-critico').value = '';
+            document.getElementById('item-tipo-dano').value = '';
+            document.getElementById('item-espacos').value = '0';
+            document.getElementById('item-descricao').value = '';
+            document.getElementById('arma-fields').style.display = 'block';
+            document.getElementById('item-modal').classList.add('active');
+        }
+
+        // Fechar modal de item
+        function closeItemModal() {
+            document.getElementById('item-modal').classList.remove('active');
+        }
+
+        // Salvar item
+        async function saveItem() {
+            const categoria = document.getElementById('item-categoria').value;
+            const nome = document.getElementById('item-nome').value.trim();
+            const espacos = parseInt(document.getElementById('item-espacos').value) || 0;
+            const descricao = document.getElementById('item-descricao').value.trim();
+
+            if (!nome) {
+                showMessage('Por favor, insira um nome para o item.', 'error');
+                return;
+            }
+
+            try {
+                const novoItem = {
+                    categoria,
+                    nome,
+                    espacos,
+                    descricao
+                };
+
+                // Adicionar campos específicos de arma
+                if (categoria === 'arma') {
+                    novoItem.alcance = document.getElementById('item-alcance').value.trim();
+                    novoItem.dano = document.getElementById('item-dano').value.trim();
+                    novoItem.critico = document.getElementById('item-critico').value.trim();
+                    novoItem.tipoDano = document.getElementById('item-tipo-dano').value.trim();
+                }
+
+                let inventario = fichaData.inventario || [];
+                inventario.push(novoItem);
+
+                await db.collection('fichas').doc(currentFichaId).update({
+                    inventario: inventario,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Atualizar dados locais
+                fichaData.inventario = inventario;
+                loadInventario();
+                closeItemModal();
+                showMessage('Item adicionado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao salvar item:', error);
+                showMessage('Erro ao salvar item.', 'error');
+            }
+        }
+
+        // Filtrar inventário por categoria
+        function filterInventario(categoria) {
+            document.querySelectorAll('.categoria-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-categoria') === categoria) {
+                    btn.classList.add('active');
+                }
+            });
+
+            const itensList = document.getElementById('itens-list');
+            itensList.innerHTML = '';
+
+            if (fichaData.inventario) {
+                fichaData.inventario.forEach(item => {
+                    if (categoria === 'todas' || item.categoria === categoria) {
+                        const itemCard = createItemCard(item);
+                        itensList.appendChild(itemCard);
+                    }
+                });
+            }
+        }
+
+        // Salvar informações
+        async function saveInformacoes() {
+            try {
+                const informacoes = {
+                    individualidade: document.getElementById('individualidade-text').value,
+                    aparencia: document.getElementById('aparencia-text').value,
+                    personalidade: document.getElementById('personalidade-text').value,
+                    historia: document.getElementById('historia-text').value,
+                    ambientes: document.getElementById('ambientes-text').value
+                };
+
+                await db.collection('fichas').doc(currentFichaId).update({
+                    informacoes: informacoes,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Atualizar dados locais
+                if (!fichaData.informacoes) fichaData.informacoes = {};
+                fichaData.informacoes = informacoes;
+                
+                showMessage('Informações salvas com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao salvar informações:', error);
+                showMessage('Erro ao salvar informações.', 'error');
+            }
+        }
+
+        // Salvar vida e esforço atuais
+        async function saveVidaEsforco() {
+            const pontosVida = parseInt(document.getElementById('vida-atual').textContent);
+            const pontosEsforco = parseInt(document.getElementById('esforco-atual').textContent);
+
+            try {
+                await db.collection('fichas').doc(currentFichaId).update({
+                    pontosVida: pontosVida,
+                    pontosEsforco: pontosEsforco,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Atualizar dados locais
+                fichaData.pontosVida = pontosVida;
+                fichaData.pontosEsforco = pontosEsforco;
+            } catch (error) {
+                console.error('Erro ao salvar vida/esforço:', error);
+            }
+        }
+
+        // Trocar aba (desktop)
+        function switchTab(tabName) {
+            // Atualizar tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Atualizar conteúdo
+            document.querySelectorAll('.panel-tab-content').forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `${tabName}-content`) {
+                    content.classList.add('active');
+                }
+            });
+        }
+
+        // Trocar aba (mobile)
+        function switchMobileTab(tabName) {
+            // Atualizar tabs
+            document.querySelectorAll('.mobile-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Se for atributos, mostrar painel de atributos
+            if (tabName === 'atributos') {
+                document.querySelector('.atributos-panel').style.display = 'block';
+                document.querySelector('.right-panels').style.display = 'none';
+            } else {
+                document.querySelector('.atributos-panel').style.display = 'none';
+                document.querySelector('.right-panels').style.display = 'block';
+                switchTab(tabName);
+            }
+        }
+
+        // Mostrar mensagem
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

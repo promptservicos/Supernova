@@ -218,37 +218,6 @@
             color: white;
         }
 
-        /* Descrições */
-        .description-box {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            border-left: 4px solid var(--primary);
-        }
-
-        /* Atributos Base */
-        .base-attributes {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 25px 0;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-        }
-
-        .attributes-info {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-
-        .age-modifier {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
         /* Ações */
         .actions {
             display: flex;
@@ -400,16 +369,6 @@
                     </div>
                 </div>
 
-                <div class="base-attributes">
-                    <div class="attributes-info">
-                        <strong>Atributos Base:</strong> Todos começam em <span class="age-modifier">0</span>
-                    </div>
-                    <div class="description-box">
-                        <strong>Atributos que serão registrados:</strong>
-                        <br>Força, Agilidade, Luta, Prontidão, Vigor, Destreza, Intelecto, Presença
-                    </div>
-                </div>
-
                 <div class="actions">
                     <div class="nav-buttons">
                         <button class="btn btn-secondary" disabled>
@@ -425,17 +384,24 @@
             <!-- ABA 2: ORIGEM -->
             <div class="tab-content" id="origem-tab">
                 <h3 style="margin-bottom: 20px; color: var(--primary);">
-                    <i class="fas fa-dna"></i> Origem dos Poderes
+                    <i class="fas fa-dna"></i> Individualidade
                 </h3>
                 
-                <div class="form-group full-width">
-                    <label for="power-origin">Descreva a origem dos seus poderes</label>
+                <!-- CAMPO: NOME DA INDIVIDUALIDADE -->
+                <div class="form-group">
+                    <label for="individualidade-nome">Nome da Individualidade</label>
                     <div class="input-with-icon">
                         <i class="fas fa-bolt"></i>
-                        <textarea id="power-origin" placeholder="Descreva como seu personagem obteve seus poderes..."></textarea>
+                        <input type="text" id="individualidade-nome" placeholder="Ex: Super Força, Telecinese, Controle do Fogo...">
                     </div>
-                    <div class="description-box">
-                        Descreva de forma criativa como seu personagem obteve seus poderes. Pode ser um acidente, uma dádiva, um experimento, treinamento árduo, ou qualquer outra origem que você imaginar.
+                </div>
+
+                <!-- CAMPO: DESCRIÇÃO DA INDIVIDUALIDADE -->
+                <div class="form-group">
+                    <label for="individualidade-descricao">Descrição da Individualidade</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-file-alt"></i>
+                        <textarea id="individualidade-descricao" placeholder="Descreva como seu poder funciona, suas limitações e características especiais..."></textarea>
                     </div>
                 </div>
 
@@ -445,7 +411,7 @@
                             <i class="fas fa-arrow-left"></i> Anterior
                         </button>
                         <button class="btn btn-primary" id="avancar-ficha">
-                            Avançar<i class="fas fa-arrow-right"></i>
+                            Avançar <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
@@ -538,7 +504,7 @@
 
         // Validar dados da aba Identidade
         function validateIdentidade() {
-            const nome = document.getElementById('character-name').value;
+            const alterEgo = document.getElementById('alter-ego').value;
             
             if (!alterEgo.trim()) {
                 showMessage('Por favor, preencha o alter ego.', 'error');
@@ -559,7 +525,8 @@
             const nome = document.getElementById('character-name').value;
             const alterEgo = document.getElementById('alter-ego').value;
             const idade = document.getElementById('character-age').value;
-            const origem = document.getElementById('power-origin').value;
+            const individualidadeNome = document.getElementById('individualidade-nome').value;
+            const individualidadeDescricao = document.getElementById('individualidade-descricao').value;
 
             if (!alterEgo) {
                 showMessage('Por favor, preencha o alter ego.', 'error');
@@ -573,19 +540,10 @@
                 alterEgo: alterEgo,
                 idade: idade ? parseInt(idade) : null,
                 
-                // Origem
-                origem: origem,
-                
-                // Atributos base (todos começam em 0)
-                atributos: {
-                    forca: 0,
-                    agilidade: 0,
-                    luta: 0,
-                    prontidao: 0,
-                    vigor: 0,
-                    destreza: 0,
-                    intelecto: 0,
-                    presenca: 0
+                // Individualidade
+                individualidade: {
+                    nome: individualidadeNome,
+                    descricao: individualidadeDescricao
                 },
                 
                 // Metadados
@@ -622,7 +580,7 @@
                 
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = false;
-                avancarBtn.innerHTML = 'Avançar<i class="fas fa-arrow-right"></i>';
+                avancarBtn.innerHTML = 'Avançar <i class="fas fa-arrow-right"></i>';
             }
         }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supernova RPG - Escolher Arquétipo</title>
+    <title>Supernova RPG - Distribuir Atributos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -34,11 +34,11 @@
             background: linear-gradient(135deg, var(--darker), var(--dark));
             color: var(--light);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -46,19 +46,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--glass-border);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .logo h1 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -66,7 +66,7 @@
         }
 
         .logo i {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: var(--primary);
         }
 
@@ -74,14 +74,15 @@
             background: rgba(108, 99, 255, 0.2);
             border: 1px solid var(--primary);
             color: var(--light);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 15px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.9rem;
         }
 
         .back-btn:hover {
@@ -90,147 +91,193 @@
 
         .page-title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .page-title h2 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
         }
 
         .page-title p {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
         .creation-card {
             background: var(--glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        /* Lista de Arquétipos */
-        .archetype-list {
-            margin: 20px 0;
-        }
-
-        .archetype-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
             border-radius: 12px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .archetype-item:hover {
-            border-color: var(--primary);
+        /* Informações */
+        .info-box {
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .pontos-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+        }
+
+        /* Grid de Atributos */
+        .atributos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .atributo-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .atributo-card:hover {
+            border-color: var(--secondary);
             transform: translateY(-2px);
         }
 
-        .archetype-item.selected {
-            border-color: var(--secondary);
-            background: rgba(255, 101, 132, 0.15);
+        .atributo-card.zero {
+            border-color: var(--error);
+            background: rgba(244, 67, 54, 0.1);
         }
 
-        .archetype-icon {
-            font-size: 1.5rem;
-            color: var(--primary);
-            width: 40px;
-            text-align: center;
+        .atributo-card.max {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
         }
 
-        .archetype-name {
+        .atributo-nome {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 10px;
+        }
+
+        .atributo-valor {
+            font-size: 2rem;
             font-weight: 700;
             color: var(--primary);
-            font-size: 1.3rem;
-        }
-
-        /* Detalhes do Arquétipo - AGORA DENTRO DA LISTA */
-        .archetype-detail {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 0 0 15px 0;
-            border-left: 4px solid var(--primary);
-            display: none;
-        }
-
-        .archetype-detail.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .detail-title {
-            font-size: 1.4rem;
-            color: var(--primary);
             margin-bottom: 15px;
-            font-weight: 600;
         }
 
-        .detail-description {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 20px;
+        .atributo-card.zero .atributo-valor {
+            color: var(--error);
+        }
+
+        .atributo-card.max .atributo-valor {
+            color: var(--success);
+        }
+
+        .atributo-controles {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-atributo {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
             font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .detail-section {
-            margin: 20px 0;
+        .btn-atributo:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
         }
 
-        .section-title {
+        .btn-atributo:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Potência */
+        .potencia-card {
+            background: rgba(255, 101, 132, 0.2);
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        .potencia-nome {
             font-size: 1.1rem;
+            font-weight: 600;
             color: var(--secondary);
             margin-bottom: 10px;
-            font-weight: 600;
         }
 
-        .pericias-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
+        .potencia-valor {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 10px;
         }
 
-        .pericia-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+        .potencia-info {
+            font-size: 0.8rem;
+            color: var(--light);
+            opacity: 0.9;
         }
 
         /* Ações */
         .actions {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 10px;
+            margin-top: 20px;
             justify-content: space-between;
         }
 
         .btn {
-            padding: 15px 25px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-primary {
@@ -261,15 +308,16 @@
 
         .nav-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .message {
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: none;
+            font-size: 0.9rem;
         }
 
         .message.success {
@@ -285,13 +333,13 @@
         }
 
         @media (max-width: 768px) {
-            .pericias-list {
+            .atributos-grid {
                 grid-template-columns: 1fr;
             }
             
             header {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
                 text-align: center;
             }
             
@@ -318,24 +366,81 @@
         </header>
 
         <div class="page-title">
-            <h2>Escolher Arquétipo</h2>
-            <p>Selecione o estilo de combate e habilidades do seu herói</p>
+            <h2>Distribuir Atributos</h2>
+            <p>Distribua os pontos entre os atributos do seu herói</p>
         </div>
 
         <div class="message" id="message"></div>
 
         <div class="creation-card">
-            <div class="archetype-list" id="archetype-list">
-                <!-- Arquétipos serão carregados do Firebase -->
+            <div class="info-box">
+                <p><strong>Você tem 9 pontos totais para distribuir entre os 5 atributos.</strong></p>
+                <p>Cada atributo começa com 1 ponto. Você pode diminuir um atributo para 0 para ganhar pontos extras.</p>
+                <p><strong>Nenhum atributo pode passar de 3 pontos.</strong></p>
+            </div>
+
+            <div class="pontos-display" id="pontos-display">Pontos disponíveis: 4</div>
+
+            <div class="atributos-grid">
+                <div class="atributo-card" data-atributo="FOR">
+                    <div class="atributo-nome">FORÇA</div>
+                    <div class="atributo-valor">1</div>
+                    <div class="atributo-controles">
+                        <button class="btn-atributo" data-acao="diminuir" disabled>-</button>
+                        <button class="btn-atributo" data-acao="aumentar">+</button>
+                    </div>
+                </div>
+
+                <div class="atributo-card" data-atributo="AGI">
+                    <div class="atributo-nome">AGILIDADE</div>
+                    <div class="atributo-valor">1</div>
+                    <div class="atributo-controles">
+                        <button class="btn-atributo" data-acao="diminuir" disabled>-</button>
+                        <button class="btn-atributo" data-acao="aumentar">+</button>
+                    </div>
+                </div>
+
+                <div class="atributo-card" data-atributo="INT">
+                    <div class="atributo-nome">INTELECTO</div>
+                    <div class="atributo-valor">1</div>
+                    <div class="atributo-controles">
+                        <button class="btn-atributo" data-acao="diminuir" disabled>-</button>
+                        <button class="btn-atributo" data-acao="aumentar">+</button>
+                    </div>
+                </div>
+
+                <div class="atributo-card" data-atributo="VIG">
+                    <div class="atributo-nome">VIGOR</div>
+                    <div class="atributo-valor">1</div>
+                    <div class="atributo-controles">
+                        <button class="btn-atributo" data-acao="diminuir" disabled>-</button>
+                        <button class="btn-atributo" data-acao="aumentar">+</button>
+                    </div>
+                </div>
+
+                <div class="atributo-card" data-atributo="PRE">
+                    <div class="atributo-nome">PRESENÇA</div>
+                    <div class="atributo-valor">1</div>
+                    <div class="atributo-controles">
+                        <button class="btn-atributo" data-acao="diminuir" disabled>-</button>
+                        <button class="btn-atributo" data-acao="aumentar">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="potencia-card">
+                <div class="potencia-nome">POTÊNCIA</div>
+                <div class="potencia-valor">2</div>
+                <div class="potencia-info">Este atributo é fixo e aumenta automaticamente a cada 2 níveis</div>
             </div>
 
             <div class="actions">
                 <div class="nav-buttons">
-                    <button class="btn btn-secondary" id="back-to-identidade">
+                    <button class="btn btn-secondary" id="back-to-pericias">
                         <i class="fas fa-arrow-left"></i> Anterior
                     </button>
                     <button class="btn btn-primary" id="avancar-ficha" disabled>
-                        Avançar<i class="fas fa-arrow-right"></i>
+                        Avançar para Próxima Etapa <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -362,27 +467,20 @@
         let currentUser = null;
         let currentFichaId = null;
         let currentSlot = null;
-        let selectedArchetype = null;
-        let archetypesData = {};
-        let currentDetailElement = null;
-
-        // Ícones para cada arquétipo
-        const archetypeIcons = {
-            'Acrobata': 'fas fa-user-ninja',
-            'Canal': 'fas fa-bolt',
-            'Colosso': 'fas fa-mountain',
-            'Farol': 'fas fa-lightbulb',
-            'Gladiador': 'fas fa-shield-alt',
-            'Inventor': 'fas fa-cogs',
-            'Justiceiro': 'fas fa-gavel',
-            'Mentalista': 'fas fa-brain',
-            'Pugilista': 'fas fa-fist-raised',
-            'Velocista': 'fas fa-running'
+        let pontosDisponiveis = 4;
+        const atributos = {
+            FOR: 1,
+            AGI: 1,
+            INT: 1,
+            VIG: 1,
+            PRE: 1,
+            POT: 2
         };
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             setupNavigation();
+            setupAtributos();
             
             // Verificar autenticação e parâmetros
             auth.onAuthStateChanged((user) => {
@@ -397,8 +495,6 @@
                         setTimeout(() => {
                             window.location.href = 'fichas.html';
                         }, 2000);
-                    } else {
-                        loadArchetypes();
                     }
                 } else {
                     window.location.href = 'index.html';
@@ -406,180 +502,108 @@
             });
         });
 
-        // Carregar arquétipos do Firebase
-        async function loadArchetypes() {
-            try {
-                const archetypeList = document.getElementById('archetype-list');
-                archetypeList.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando arquétipos...</div>';
-
-                const snapshot = await db.collection('arquetipos').get();
+        // Configurar interação com os atributos
+        function setupAtributos() {
+            const cardsAtributos = document.querySelectorAll('.atributo-card');
+            
+            cardsAtributos.forEach(card => {
+                const btnAumentar = card.querySelector('[data-acao="aumentar"]');
+                const btnDiminuir = card.querySelector('[data-acao="diminuir"]');
+                const atributo = card.getAttribute('data-atributo');
                 
-                if (snapshot.empty) {
-                    archetypeList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Nenhum arquétipo encontrado.</div>';
-                    return;
-                }
-
-                archetypeList.innerHTML = '';
-                archetypesData = {};
-
-                snapshot.forEach(doc => {
-                    const archetypeName = doc.id;
-                    const archetypeData = doc.data();
-                    
-                    // Armazenar dados para uso posterior
-                    archetypesData[archetypeName] = archetypeData;
-                    
-                    // Criar item da lista
-                    const listItem = document.createElement('div');
-                    listItem.className = 'archetype-item';
-                    listItem.setAttribute('data-archetype', archetypeName);
-                    
-                    const iconClass = archetypeIcons[archetypeName] || 'fas fa-user';
-                    
-                    listItem.innerHTML = `
-                        <div class="archetype-icon">
-                            <i class="${iconClass}"></i>
-                        </div>
-                        <div class="archetype-name">${archetypeName}</div>
-                    `;
-                    
-                    // Ao clicar: seleciona E expande os detalhes
-                    listItem.addEventListener('click', () => {
-                        selectArchetype(archetypeName, listItem);
-                    });
-                    
-                    archetypeList.appendChild(listItem);
+                btnAumentar.addEventListener('click', function() {
+                    aumentarAtributo(atributo);
                 });
-
-            } catch (error) {
-                console.error('Erro ao carregar arquétipos:', error);
-                showMessage('Erro ao carregar arquétipos. Tente novamente.', 'error');
-            }
-        }
-
-        // Mostrar detalhes do arquétipo ABAIXO do item selecionado
-        function showArchetypeDetail(name, parentElement) {
-            const archetypeData = archetypesData[name];
-            if (!archetypeData) return;
-
-            // Remover detalhes anteriores
-            if (currentDetailElement) {
-                currentDetailElement.remove();
-                currentDetailElement = null;
-            }
-
-            // Criar elemento de detalhes
-            const detailElement = document.createElement('div');
-            detailElement.className = 'archetype-detail active';
-            detailElement.setAttribute('data-archetype-detail', name);
-            
-            // Função auxiliar para formatar perícias (array, objeto ou string)
-            function formatPericias(periciasData) {
-                if (!periciasData) {
-                    return '<p>Nenhuma perícia definida.</p>';
-                }
                 
-                if (Array.isArray(periciasData)) {
-                    // Se for array, mostra cada item
-                    return `<div class="pericias-list">
-                        ${periciasData.map(pericia => 
-                            `<div class="pericia-item">${pericia}</div>`
-                        ).join('')}
-                    </div>`;
-                } else if (typeof periciasData === 'object') {
-                    // Se for objeto, mostra chave: valor
-                    return `<div class="pericias-list">
-                        ${Object.entries(periciasData).map(([key, value]) => 
-                            `<div class="pericia-item"><strong>${key}:</strong> ${value}</div>`
-                        ).join('')}
-                    </div>`;
-                } else {
-                    // Se for string ou outro tipo, mostra como texto
-                    return `<div class="pericia-item">${periciasData}</div>`;
-                }
-            }
-
-            // Formatar perícias fixas (AGORA PRIMEIRO)
-            const periciasFixasHTML = formatPericias(archetypeData.periciasFixas);
-
-            // Formatar perícias (AGORA DEPOIS)
-            const periciasHTML = formatPericias(archetypeData.pericias);
-
-            detailElement.innerHTML = `
-                <div class="detail-title">${name}</div>
-                <div class="detail-description">${archetypeData.descricao || 'Descrição não disponível.'}</div>
-                
-                <div class="detail-section">
-                    <div class="section-title">Perícias Fixas</div>
-                    ${periciasFixasHTML}
-                </div>
-                
-                <div class="detail-section">
-                    <div class="section-title">Perícias</div>
-                    ${periciasHTML}
-                </div>
-            `;
-            
-            // Inserir os detalhes APÓS o item clicado
-            parentElement.parentNode.insertBefore(detailElement, parentElement.nextSibling);
-            currentDetailElement = detailElement;
-        }
-
-        // Selecionar arquétipo
-        function selectArchetype(name, element) {
-            selectedArchetype = name;
-            
-            // Remover seleção anterior
-            document.querySelectorAll('.archetype-item').forEach(item => {
-                item.classList.remove('selected');
+                btnDiminuir.addEventListener('click', function() {
+                    diminuirAtributo(atributo);
+                });
             });
-            
-            // Adicionar seleção atual
-            element.classList.add('selected');
-            
-            // Mostrar detalhes
-            showArchetypeDetail(name, element);
-            
-            // Habilitar botão avançar
-            document.getElementById('avancar-ficha').disabled = false;
+        }
+
+        // Aumentar atributo
+        function aumentarAtributo(atributo) {
+            if (pontosDisponiveis > 0 && atributos[atributo] < 3) {
+                atributos[atributo]++;
+                pontosDisponiveis--;
+                atualizarDisplay();
+            }
+        }
+
+        // Diminuir atributo
+        function diminuirAtributo(atributo) {
+            if (atributos[atributo] > 0) {
+                // Se estiver em 1, ganha 1 ponto (vai para 0)
+                const pontosGanhos = atributos[atributo] === 1 ? 1 : 1;
+                
+                atributos[atributo]--;
+                pontosDisponiveis += pontosGanhos;
+                atualizarDisplay();
+            }
+        }
+
+        // Atualizar display
+        function atualizarDisplay() {
+            // Atualizar valores nos elementos
+            Object.keys(atributos).forEach(atributo => {
+                if (atributo !== 'POT') {
+                    const card = document.querySelector(`[data-atributo="${atributo}"]`);
+                    const valorElemento = card.querySelector('.atributo-valor');
+                    const btnAumentar = card.querySelector('[data-acao="aumentar"]');
+                    const btnDiminuir = card.querySelector('[data-acao="diminuir"]');
+                    
+                    if (valorElemento) {
+                        valorElemento.textContent = atributos[atributo];
+                        
+                        // Atualizar classes para estilo visual
+                        card.classList.toggle('zero', atributos[atributo] === 0);
+                        card.classList.toggle('max', atributos[atributo] === 3);
+                        
+                        // Atualizar estado dos botões
+                        btnAumentar.disabled = pontosDisponiveis === 0 || atributos[atributo] >= 3;
+                        btnDiminuir.disabled = atributos[atributo] === 0;
+                    }
+                }
+            });
+
+            // Atualizar display de pontos
+            document.getElementById('pontos-display').textContent = `Pontos disponíveis: ${pontosDisponiveis}`;
+
+            // Habilitar/desabilitar botão avançar
+            document.getElementById('avancar-ficha').disabled = pontosDisponiveis !== 0;
         }
 
         // Navegação
         function setupNavigation() {
-            document.getElementById('back-to-identidade').addEventListener('click', async () => {
+            document.getElementById('back-to-pericias').addEventListener('click', async () => {
                 // Salvar antes de voltar
-                if (selectedArchetype) {
-                    await saveArchetype();
-                }
-                window.location.href = `criarficha.html?slot=${currentSlot}`;
+                await salvarAtributos();
+                window.location.href = `criarficha.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
             });
             
-            document.getElementById('avancar-ficha').addEventListener('click', saveAndContinue);
+            document.getElementById('avancar-ficha').addEventListener('click', salvarEContinuar);
         }
 
-        // Salvar arquétipo (usado ao voltar também)
-        async function saveArchetype() {
-            if (!selectedArchetype) return;
-
+        // Salvar atributos
+        async function salvarAtributos() {
             try {
                 const updateData = {
-                    arquetipo: selectedArchetype,
-                    etapaCriacao: 2,
+                    atributos: atributos,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 await db.collection('fichas').doc(currentFichaId).update(updateData);
                 return true;
             } catch (error) {
-                console.error('Erro ao salvar arquétipo:', error);
+                console.error('Erro ao salvar atributos:', error);
                 return false;
             }
         }
 
         // Salvar e continuar
-        async function saveAndContinue() {
-            if (!selectedArchetype) {
-                showMessage('Por favor, selecione um arquétipo.', 'error');
+        async function salvarEContinuar() {
+            if (pontosDisponiveis !== 0) {
+                showMessage('Distribua todos os pontos antes de avançar.', 'error');
                 return;
             }
 
@@ -588,10 +612,10 @@
                 avancarBtn.disabled = true;
                 avancarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
-                const success = await saveArchetype();
+                const success = await salvarAtributos();
                 
                 if (success) {
-                    showMessage('Arquétipo salvo com sucesso! Avançando...', 'success');
+                    showMessage('Atributos salvos com sucesso! Avançando...', 'success');
 
                     // Redirecionar para próxima etapa
                     setTimeout(() => {
@@ -602,12 +626,12 @@
                 }
 
             } catch (error) {
-                console.error('Erro ao salvar arquétipo:', error);
-                showMessage('Erro ao salvar arquétipo. Tente novamente.', 'error');
+                console.error('Erro ao salvar atributos:', error);
+                showMessage('Erro ao salvar atributos. Tente novamente.', 'error');
                 
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = false;
-                avancarBtn.innerHTML = 'Avançar<i class="fas fa-arrow-right"></i>';
+                avancarBtn.innerHTML = 'Avançar para Próxima Etapa <i class="fas fa-arrow-right"></i>';
             }
         }
 

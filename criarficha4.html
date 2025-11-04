@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supernova RPG - Escolher Perícias</title>
+    <title>Supernova RPG - Escolher Arquétipo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -34,7 +34,7 @@
             background: linear-gradient(135deg, var(--darker), var(--dark));
             color: var(--light);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
@@ -46,19 +46,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--glass-border);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .logo h1 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -66,7 +66,7 @@
         }
 
         .logo i {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: var(--primary);
         }
 
@@ -74,14 +74,15 @@
             background: rgba(108, 99, 255, 0.2);
             border: 1px solid var(--primary);
             color: var(--light);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 15px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.9rem;
         }
 
         .back-btn:hover {
@@ -90,158 +91,159 @@
 
         .page-title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .page-title h2 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
         }
 
         .page-title p {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
         .creation-card {
             background: var(--glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        /* Informações obrigatórias */
-        .obrigatorias-info {
-            background: rgba(255, 101, 132, 0.1);
-            border: 1px solid var(--secondary);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .obrigatorias-title {
-            color: var(--secondary);
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .obrigatorias-list {
+        /* Cards de Arquétipos */
+        .archetype-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 15px 0;
         }
 
-        .obrigatoria-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            border-left: 3px solid var(--secondary);
-        }
-
-        /* Lista de Perícias */
-        .pericias-list {
-            margin: 20px 0;
-        }
-
-        .pericia-category {
-            margin-bottom: 25px;
-        }
-
-        .category-title {
-            font-size: 1.3rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .pericia-item {
+        .archetype-card {
             background: rgba(0, 0, 0, 0.3);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .pericia-item:hover {
+        .archetype-card:hover {
             border-color: var(--primary);
+            transform: translateY(-5px);
         }
 
-        .pericia-item.selected {
+        .archetype-card.selected {
             border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(255, 101, 132, 0.3);
             background: rgba(255, 101, 132, 0.15);
         }
 
-        .pericia-checkbox {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--primary);
-            border-radius: 4px;
+        .card-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            gap: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
         }
 
-        .pericia-checkbox.checked {
-            background: var(--primary);
+        .archetype-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
         }
 
-        .pericia-checkbox.checked::after {
-            content: '✓';
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .pericia-info {
+        .archetype-name-container {
             flex: 1;
         }
 
-        .pericia-name {
+        .archetype-name {
             font-weight: 600;
-            color: var(--light);
-            font-size: 1.1rem;
+            color: var(--primary);
+            font-size: 1.3rem;
             margin-bottom: 5px;
         }
 
-        .pericia-atributo {
-            color: var(--primary);
+        .archetype-tagline {
             font-size: 0.9rem;
-            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Detalhes do card */
+        .detail-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .detail-section {
+            margin: 12px 0;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            color: var(--secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .pericias-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .pericia-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            text-align: left;
         }
 
         /* Ações */
         .actions {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 10px;
+            margin-top: 20px;
             justify-content: space-between;
         }
 
         .btn {
-            padding: 15px 25px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-primary {
@@ -272,15 +274,16 @@
 
         .nav-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .message {
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: none;
+            font-size: 0.9rem;
         }
 
         .message.success {
@@ -296,13 +299,13 @@
         }
 
         @media (max-width: 768px) {
-            .obrigatorias-list {
-                grid-template-columns: 1fr;
+            .archetype-cards {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             }
             
             header {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
                 text-align: center;
             }
             
@@ -312,12 +315,6 @@
             
             .nav-buttons {
                 order: -1;
-            }
-            
-            .pericia-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
             }
         }
     </style>
@@ -335,34 +332,24 @@
         </header>
 
         <div class="page-title">
-            <h2>Escolher Perícias</h2>
-            <p>Selecione as perícias do seu herói</p>
+            <h2>Escolher Arquétipo</h2>
+            <p>Selecione o estilo de combate e habilidades do seu herói</p>
         </div>
 
         <div class="message" id="message"></div>
 
         <div class="creation-card">
-            <div class="obrigatorias-info" id="obrigatorias-info" style="display: none;">
-                <div class="obrigatorias-title">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Perícias Obrigatórias
-                </div>
-                <div class="obrigatorias-list" id="obrigatorias-list">
-                    <!-- Perícias obrigatórias serão carregadas aqui -->
-                </div>
-            </div>
-
-            <div class="pericias-list" id="pericias-list">
-                <!-- Perícias serão carregadas do Firebase -->
+            <div class="archetype-cards" id="archetype-cards">
+                <!-- Cards de arquétipos serão carregados do Firebase -->
             </div>
 
             <div class="actions">
                 <div class="nav-buttons">
-                    <button class="btn btn-secondary" id="back-to-origem">
+                    <button class="btn btn-secondary" id="back-to-identidade">
                         <i class="fas fa-arrow-left"></i> Anterior
                     </button>
-                    <button class="btn btn-primary" id="avancar-ficha">
-                        Avançar <i class="fas fa-arrow-right"></i>
+                    <button class="btn btn-primary" id="avancar-ficha" disabled>
+                        Avançar<i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -389,11 +376,23 @@
         let currentUser = null;
         let currentFichaId = null;
         let currentSlot = null;
-        let selectedPericias = [];
+        let selectedArchetype = null;
+        let archetypesData = {};
         let fichaData = null;
-        let arquetipoData = null;
-        let origemData = null;
-        let periciasObrigatorias = [];
+
+        // Ícones para cada arquétipo
+        const archetypeIcons = {
+            'Acrobata': 'fas fa-user-ninja',
+            'Canal': 'fas fa-bolt',
+            'Colosso': 'fas fa-mountain',
+            'Farol': 'fas fa-lightbulb',
+            'Gladiador': 'fas fa-shield-alt',
+            'Inventor': 'fas fa-cogs',
+            'Justiceiro': 'fas fa-gavel',
+            'Mentalista': 'fas fa-brain',
+            'Pugilista': 'fas fa-fist-raised',
+            'Velocista': 'fas fa-running'
+        };
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -425,236 +424,244 @@
         async function loadFichaData() {
             try {
                 const fichaDoc = await db.collection('fichas').doc(currentFichaId).get();
-                
-                if (!fichaDoc.exists) {
+                if (fichaDoc.exists) {
+                    fichaData = fichaDoc.data();
+                    loadArchetypes();
+                } else {
                     showMessage('Ficha não encontrada. Redirecionando...', 'error');
                     setTimeout(() => {
                         window.location.href = 'fichas.html';
                     }, 2000);
-                    return;
                 }
-
-                fichaData = fichaDoc.data();
-                
-                // Carregar dados do arquétipo e origem
-                await Promise.all([
-                    loadArquetipoData(),
-                    loadOrigemData()
-                ]);
-
-                // Carregar perícias após ter os dados obrigatórios
-                await loadPericias();
-
             } catch (error) {
                 console.error('Erro ao carregar dados da ficha:', error);
-                showMessage('Erro ao carregar dados. Tente novamente.', 'error');
+                showMessage('Erro ao carregar dados da ficha.', 'error');
             }
         }
 
-        // Carregar dados do arquétipo
-        async function loadArquetipoData() {
-            if (!fichaData.arquetipo) return;
-            
+        // Carregar arquétipos do Firebase
+        async function loadArchetypes() {
             try {
-                const arquetipoDoc = await db.collection('arquetipos').doc(fichaData.arquetipo).get();
-                if (arquetipoDoc.exists) {
-                    arquetipoData = arquetipoDoc.data();
-                }
-            } catch (error) {
-                console.error('Erro ao carregar arquétipo:', error);
-            }
-        }
+                const archetypeCards = document.getElementById('archetype-cards');
+                archetypeCards.innerHTML = '<div style="text-align: center; padding: 15px;">Carregando arquétipos...</div>';
 
-        // Carregar dados da origem
-        async function loadOrigemData() {
-            if (!fichaData.origem) return;
-            
-            try {
-                const origemDoc = await db.collection('origens').doc(fichaData.origem).get();
-                if (origemDoc.exists) {
-                    origemData = origemDoc.data();
-                }
-            } catch (error) {
-                console.error('Erro ao carregar origem:', error);
-            }
-        }
-
-        // Carregar perícias do Firebase
-        async function loadPericias() {
-            try {
-                const periciasList = document.getElementById('pericias-list');
-                periciasList.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando perícias...</div>';
-
-                const snapshot = await db.collection('pericias').get();
+                const snapshot = await db.collection('arquetipos').get();
                 
                 if (snapshot.empty) {
-                    periciasList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--error);">Nenhuma perícia encontrada.</div>';
+                    archetypeCards.innerHTML = '<div style="text-align: center; padding: 15px; color: var(--error);">Nenhum arquétipo encontrado.</div>';
                     return;
                 }
 
-                // Processar perícias obrigatórias
-                processarPericiasObrigatorias();
+                archetypeCards.innerHTML = '';
+                archetypesData = {};
 
-                // Agrupar perícias por atributo
-                const periciasPorAtributo = {};
-                
                 snapshot.forEach(doc => {
-                    const periciaName = doc.id;
-                    const periciaData = doc.data();
-                    const atributo = periciaData.atributo || 'Geral';
+                    const archetypeName = doc.id;
+                    const archetypeData = doc.data();
                     
-                    if (!periciasPorAtributo[atributo]) {
-                        periciasPorAtributo[atributo] = [];
-                    }
+                    // Armazenar dados para uso posterior
+                    archetypesData[archetypeName] = archetypeData;
                     
-                    periciasPorAtributo[atributo].push({
-                        name: periciaName,
-                        ...periciaData
-                    });
-                });
-
-                // Renderizar perícias agrupadas por atributo
-                periciasList.innerHTML = '';
-                
-                Object.keys(periciasPorAtributo).sort().forEach(atributo => {
-                    const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'pericia-category';
+                    // Criar card
+                    const card = document.createElement('div');
+                    card.className = 'archetype-card';
+                    card.setAttribute('data-archetype', archetypeName);
                     
-                    categoryDiv.innerHTML = `
-                        <div class="category-title">${atributo}</div>
+                    const iconClass = archetypeIcons[archetypeName] || 'fas fa-user';
+                    
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="archetype-icon">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="archetype-name-container">
+                                <div class="archetype-name">${archetypeName}</div>
+                                <div class="archetype-tagline">${archetypeData.tagline || 'Arquétipo'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-description">${archetypeData.descricao || 'Descrição não disponível.'}</div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title">Perícias Fixas</div>
+                            <div class="pericias-list">
+                                ${formatPericias(archetypeData.periciasFixas, true)}
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title">Perícias</div>
+                            <div class="pericias-list">
+                                ${formatPericias(archetypeData.pericias, false)}
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title">Vida</div>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div>Vida Inicial</div>
+                                    <div>${archetypeData.vidaInicial || 0} + VIG</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div>Vida por Nível</div>
+                                    <div>${archetypeData.vidaNivel || 0} + VIG</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title">Pontos de Esforço</div>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div>Esforço Inicial</div>
+                                    <div>${archetypeData.esforcoInicial || 0} + PRE</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div>Esforço por Nível</div>
+                                    <div>${archetypeData.esforcoNivel || 0} + PRE</div>
+                                </div>
+                            </div>
+                        </div>
                     `;
                     
-                    periciasPorAtributo[atributo].forEach(pericia => {
-                        const isObrigatoria = periciasObrigatorias.includes(pericia.name);
-                        const periciaItem = document.createElement('div');
-                        periciaItem.className = `pericia-item ${isObrigatoria ? 'selected' : ''}`;
-                        periciaItem.setAttribute('data-pericia', pericia.name);
-                        
-                        if (isObrigatoria) {
-                            periciaItem.style.background = 'rgba(255, 101, 132, 0.2)';
-                            periciaItem.style.border = '2px solid var(--secondary)';
-                        }
-                        
-                        periciaItem.innerHTML = `
-                            <div class="pericia-checkbox ${isObrigatoria ? 'checked' : ''}"></div>
-                            <div class="pericia-info">
-                                <div class="pericia-name">
-                                    ${pericia.name}
-                                    ${isObrigatoria ? ' <span style="color: var(--secondary); font-size: 0.8rem;">(Obrigatória)</span>' : ''}
-                                </div>
-                                <div class="pericia-atributo">Atributo: ${pericia.atributo || 'Geral'}</div>
-                            </div>
-                        `;
-                        
-                        // Se for obrigatória, já marca como selecionada
-                        if (isObrigatoria) {
-                            selectedPericias.push(pericia.name);
-                        }
-                        
-                        periciaItem.addEventListener('click', () => {
-                            if (!isObrigatoria) { // Não permite desmarcar obrigatórias
-                                togglePericia(pericia.name, periciaItem);
-                            }
-                        });
-                        
-                        categoryDiv.appendChild(periciaItem);
+                    // Ao clicar: seleciona o arquétipo
+                    card.addEventListener('click', () => {
+                        selectArchetype(archetypeName, card);
                     });
                     
-                    periciasList.appendChild(categoryDiv);
+                    archetypeCards.appendChild(card);
                 });
 
             } catch (error) {
-                console.error('Erro ao carregar perícias:', error);
-                showMessage('Erro ao carregar perícias. Tente novamente.', 'error');
+                console.error('Erro ao carregar arquétipos:', error);
+                showMessage('Erro ao carregar arquétipos. Tente novamente.', 'error');
             }
         }
 
-        // Processar perícias obrigatórias do arquétipo e origem
-        function processarPericiasObrigatorias() {
-            periciasObrigatorias = [];
-
-            // Adicionar perícias fixas do arquétipo
-            if (arquetipoData && arquetipoData.periciasFixas) {
-                if (Array.isArray(arquetipoData.periciasFixas)) {
-                    periciasObrigatorias.push(...arquetipoData.periciasFixas);
-                } else if (typeof arquetipoData.periciasFixas === 'string') {
-                    periciasObrigatorias.push(arquetipoData.periciasFixas);
+        // Formatar perícias para exibição
+        function formatPericias(periciasData, isPericiasFixas = false) {
+            if (!periciasData) {
+                return '<div class="pericia-item">Nenhuma perícia definida</div>';
+            }
+            
+            let periciasHTML = '';
+            
+            if (Array.isArray(periciasData)) {
+                // Se for array, mostra cada item
+                periciasData.forEach(pericia => {
+                    if (isPericiasFixas) {
+                        periciasHTML += `<div class="pericia-item">${pericia}</div>`;
+                    } else {
+                        periciasHTML += `<div class="pericia-item">${pericia} + INT</div>`;
+                    }
+                });
+            } else if (typeof periciasData === 'object') {
+                // Se for objeto, mostra chave: valor
+                Object.entries(periciasData).forEach(([key, value]) => {
+                    if (isPericiasFixas) {
+                        periciasHTML += `<div class="pericia-item"><strong>${key}:</strong> ${value}</div>`;
+                    } else {
+                        periciasHTML += `<div class="pericia-item"><strong>${key}:</strong> ${value} + INT</div>`;
+                    }
+                });
+            } else {
+                // Se for string ou outro tipo, mostra como texto
+                if (isPericiasFixas) {
+                    periciasHTML += `<div class="pericia-item">${periciasData}</div>`;
+                } else {
+                    periciasHTML += `<div class="pericia-item">${periciasData} + INT</div>`;
                 }
             }
-
-            // Adicionar perícia fixa da origem
-            if (origemData && origemData.periciaFixa) {
-                periciasObrigatorias.push(origemData.periciaFixa);
-            }
-
-            // Mostrar informações obrigatórias
-            if (periciasObrigatorias.length > 0) {
-                const obrigatoriasInfo = document.getElementById('obrigatorias-info');
-                const obrigatoriasList = document.getElementById('obrigatorias-list');
-                
-                obrigatoriasInfo.style.display = 'block';
-                obrigatoriasList.innerHTML = periciasObrigatorias.map(pericia => 
-                    `<div class="obrigatoria-item">${pericia}</div>`
-                ).join('');
-            }
+            
+            return periciasHTML;
         }
 
-        // Alternar seleção de perícia
-        function togglePericia(periciaName, element) {
-            const checkbox = element.querySelector('.pericia-checkbox');
-            const index = selectedPericias.indexOf(periciaName);
+        // Selecionar arquétipo
+        function selectArchetype(name, cardElement) {
+            // Remover seleção anterior
+            document.querySelectorAll('.archetype-card').forEach(card => {
+                card.classList.remove('selected');
+            });
             
-            if (index > -1) {
-                // Remover da seleção
-                selectedPericias.splice(index, 1);
-                element.classList.remove('selected');
-                checkbox.classList.remove('checked');
-            } else {
-                // Adicionar à seleção
-                selectedPericias.push(periciaName);
-                element.classList.add('selected');
-                checkbox.classList.add('checked');
-            }
+            // Adicionar seleção atual
+            selectedArchetype = name;
+            cardElement.classList.add('selected');
+            
+            // Habilitar botão avançar
+            document.getElementById('avancar-ficha').disabled = false;
         }
 
         // Navegação
         function setupNavigation() {
-            document.getElementById('back-to-origem').addEventListener('click', async () => {
+            document.getElementById('back-to-identidade').addEventListener('click', async () => {
                 // Salvar antes de voltar
-                await savePericias();
-                window.location.href = `criarficha3.html?fichaId=${currentFichaId}&slot=${currentSlot}`;
+                if (selectedArchetype) {
+                    await saveArchetype();
+                }
+                window.location.href = `criarficha.html?slot=${currentSlot}`;
             });
             
             document.getElementById('avancar-ficha').addEventListener('click', saveAndContinue);
         }
 
-        // Salvar perícias
-        async function savePericias() {
+        // Salvar arquétipo (usado ao voltar também)
+        async function saveArchetype() {
+            if (!selectedArchetype || !fichaData) return;
+
             try {
+                const archetypeData = archetypesData[selectedArchetype];
+                
+                // Calcular Pontos de Vida (vidaInicial + VIG)
+                const vigor = fichaData.atributos?.VIG || 0;
+                const vidaInicial = archetypeData.vidaInicial || 0;
+                const pontosVida = vidaInicial + vigor;
+                
+                // Calcular Pontos de Esforço (esforcoInicial + PRE)
+                const presenca = fichaData.atributos?.PRE || 0;
+                const esforcoInicial = archetypeData.esforcoInicial || 0;
+                const pontosEsforco = esforcoInicial + presenca;
+
                 const updateData = {
-                    pericias: selectedPericias,
+                    arquetipo: selectedArchetype,
+                    pontosVida: pontosVida,
+                    pontosVidaMax: pontosVida,
+                    pontosEsforco: pontosEsforco,
+                    pontosEsforcoMax: pontosEsforco,
+                    vidaInicial: vidaInicial,
+                    vidaNivel: archetypeData.vidaNivel || 0,
+                    esforcoInicial: esforcoInicial,
+                    esforcoNivel: archetypeData.esforcoNivel || 0,
+                    periciasFixas: archetypeData.periciasFixas || [],
+                    pericias: archetypeData.pericias || [],
+                    etapaCriacao: 2,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 await db.collection('fichas').doc(currentFichaId).update(updateData);
                 return true;
             } catch (error) {
-                console.error('Erro ao salvar perícias:', error);
+                console.error('Erro ao salvar arquétipo:', error);
                 return false;
             }
         }
 
         // Salvar e continuar
         async function saveAndContinue() {
+            if (!selectedArchetype) {
+                showMessage('Por favor, selecione um arquétipo.', 'error');
+                return;
+            }
+
             try {
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = true;
                 avancarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
-                const success = await savePericias();
+                const success = await saveArchetype();
                 
                 if (success) {
-                    showMessage('Perícias salvas com sucesso! Avançando...', 'success');
+                    showMessage('Arquétipo salvo com sucesso! Avançando...', 'success');
 
                     // Redirecionar para próxima etapa
                     setTimeout(() => {
@@ -665,12 +672,12 @@
                 }
 
             } catch (error) {
-                console.error('Erro ao salvar perícias:', error);
-                showMessage('Erro ao salvar perícias. Tente novamente.', 'error');
+                console.error('Erro ao salvar arquétipo:', error);
+                showMessage('Erro ao salvar arquétipo. Tente novamente.', 'error');
                 
                 const avancarBtn = document.getElementById('avancar-ficha');
                 avancarBtn.disabled = false;
-                avancarBtn.innerHTML = 'Avançar <i class="fas fa-arrow-right"></i>';
+                avancarBtn.innerHTML = 'Avançar<i class="fas fa-arrow-right"></i>';
             }
         }
 
