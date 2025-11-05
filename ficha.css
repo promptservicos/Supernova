@@ -1,0 +1,130 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(120deg, #0f172a, #1e293b);
+  color: #f1f5f9;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.painel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  margin-top: 3rem;
+  padding: 2rem;
+  width: 95%;
+  max-width: 650px;
+}
+
+header {
+  text-align: center;
+}
+
+select {
+  background: #1e293b;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.ficha-topo {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.sub {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.barras {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.barra {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="number"], input[type="text"] {
+  background: #0f172a;
+  border: 1px solid #38bdf8;
+  color: #f8fafc;
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+}
+
+.status {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.abas {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.abas button {
+  background: #1e293b;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.abas button.ativa {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.conteudo-aba {
+  display: none;
+  margin-top: 1rem;
+}
+
+.conteudo-aba[data-ativa] {
+  display: block;
+}
+
+.add-item {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.5rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.7rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}

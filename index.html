@@ -4,565 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supernova RPG - Login</title>
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #6C63FF;
-            --primary-dark: #5a52d5;
-            --secondary: #FF6584;
-            --dark: #2A2D3E;
-            --darker: #1F2232;
-            --light: #F5F5F7;
-            --success: #4CAF50;
-            --error: #f44336;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--darker), var(--dark));
-            color: var(--light);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .logo p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
-        }
-
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 4px;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .form-container {
-            display: none;
-        }
-
-        .form-container.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .input-with-icon {
-            position: relative;
-        }
-
-        .input-with-icon i.fas.fa-envelope,
-        .input-with-icon i.fas.fa-lock {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.6);
-            z-index: 1;
-        }
-
-        .input-with-icon input {
-            width: 100%;
-            padding: 15px 50px 15px 45px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .input-with-icon input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.3);
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.6);
-            z-index: 2;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-toggle:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(to right, var(--primary), var(--primary-dark));
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            display: none;
-        }
-
-        .message.success {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid var(--success);
-            color: #a5d6a7;
-        }
-
-        .message.error {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid var(--error);
-            color: #ef9a9a;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .divider span {
-            padding: 0 15px;
-        }
-
-        .guest-login {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .guest-login a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .guest-login a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
-
-        @media (max-width: 480px) {
-            .card {
-                padding: 20px;
-            }
-            
-            .logo h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1><i class="fas fa-star"></i> SUPERNOVA RPG</h1>
-            <p>Crie seu herói e salve o universo</p>
-        </div>
-        
-        <div class="card">
-            <div class="tabs">
-                <div class="tab active" id="login-tab">Login</div>
-                <div class="tab" id="register-tab">Registro</div>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <h1><i class="fas fa-star"></i> SUPERNOVA</h1>
+                <p>Entre no universo do seu herói</p>
             </div>
-            
-            <!-- Formulário de Login -->
-            <div class="form-container active" id="login-form">
-                <div class="form-group">
-                    <label for="login-email">E-mail</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="login-email" placeholder="seu@email.com">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="login-password">Senha</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="login-password" placeholder="Sua senha">
-                        <span class="password-toggle" id="login-toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
-                
-                <button class="btn" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-                
-                <div class="divider">
-                    <span>OU</span>
-                </div>
-                
-                <div class="guest-login">
-                    <a href="#" id="guest-login">Acessar como convidado</a>
-                </div>
+
+            <div class="tab-container">
+                <button id="login-tab" class="tab active">Login</button>
+                <button id="register-tab" class="tab">Registro</button>
             </div>
-            
-            <!-- Formulário de Registro -->
-            <div class="form-container" id="register-form">
+
+            <!-- Login -->
+            <div id="login-form" class="form active">
                 <div class="form-group">
-                    <label for="register-email">E-mail</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="register-email" placeholder="seu@email.com">
-                    </div>
+                    <input type="email" id="login-email" placeholder="E-mail">
+                    <i class="fas fa-envelope icon"></i>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="register-password">Senha</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="register-password" placeholder="Mínimo 6 caracteres">
-                        <span class="password-toggle" id="register-toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
+                    <input type="password" id="login-password" placeholder="Senha">
+                    <i class="fas fa-lock icon"></i>
+                    <span class="password-toggle" id="login-toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password">Confirmar Senha</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="confirm-password" placeholder="Digite novamente">
-                        <span class="password-toggle" id="confirm-toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
-                
-                <button class="btn" id="register-btn">
-                    <i class="fas fa-user-plus"></i> Criar Conta
-                </button>
+
+                <button id="login-btn" class="btn"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+
+                <div class="divider"><span>ou</span></div>
+
+                <button id="guest-login" class="btn ghost"><i class="fas fa-user-secret"></i> Convidado</button>
             </div>
-            
+
+            <!-- Registro -->
+            <div id="register-form" class="form">
+                <div class="form-group">
+                    <input type="email" id="register-email" placeholder="E-mail">
+                    <i class="fas fa-envelope icon"></i>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="register-password" placeholder="Senha">
+                    <i class="fas fa-lock icon"></i>
+                    <span class="password-toggle" id="register-toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="confirm-password" placeholder="Confirmar senha">
+                    <i class="fas fa-lock icon"></i>
+                    <span class="password-toggle" id="confirm-toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+
+                <button id="register-btn" class="btn"><i class="fas fa-user-plus"></i> Criar conta</button>
+            </div>
+
             <div class="message" id="message"></div>
         </div>
     </div>
 
-    <script>
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyBzdrAtJoBUONdyHsEPrzWDTH9FMg1xW78",
-            authDomain: "supernova-372bf.firebaseapp.com",
-            projectId: "supernova-372bf",
-            storageBucket: "supernova-372bf.firebasestorage.app",
-            messagingSenderId: "917055386010",
-            appId: "1:917055386010:web:3f27d9173e3dd7fbdf8a23"
-        };
-
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Elementos DOM
-        const loginTab = document.getElementById('login-tab');
-        const registerTab = document.getElementById('register-tab');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
-        const guestLogin = document.getElementById('guest-login');
-        const messageDiv = document.getElementById('message');
-
-        // Alternar entre login e registro
-        loginTab.addEventListener('click', () => {
-            loginTab.classList.add('active');
-            registerTab.classList.remove('active');
-            loginForm.classList.add('active');
-            registerForm.classList.remove('active');
-            clearMessage();
-        });
-
-        registerTab.addEventListener('click', () => {
-            registerTab.classList.add('active');
-            loginTab.classList.remove('active');
-            registerForm.classList.add('active');
-            loginForm.classList.remove('active');
-            clearMessage();
-        });
-
-        // Alternar visibilidade da senha
-        function setupPasswordToggle(passwordId, toggleId) {
-            const passwordInput = document.getElementById(passwordId);
-            const toggleContainer = document.getElementById(toggleId);
-            const toggleIcon = toggleContainer.querySelector('i');
-            
-            // Só o ícone tem a hitbox, não todo o container
-            toggleIcon.addEventListener('click', (e) => {
-                e.stopPropagation(); // Previne que o clique se propague
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    toggleIcon.classList.remove('fa-eye');
-                    toggleIcon.classList.add('fa-eye-slash');
-                } else {
-                    passwordInput.type = 'password';
-                    toggleIcon.classList.remove('fa-eye-slash');
-                    toggleIcon.classList.add('fa-eye');
-                }
-            });
-
-            // Previne que o clique no input ative o toggle
-            passwordInput.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        }
-
-        // Configurar toggles de senha
-        setupPasswordToggle('login-password', 'login-toggle-password');
-        setupPasswordToggle('register-password', 'register-toggle-password');
-        setupPasswordToggle('confirm-password', 'confirm-toggle-password');
-
-        // Mostrar mensagem
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-        }
-
-        // Limpar mensagem
-        function clearMessage() {
-            messageDiv.style.display = 'none';
-        }
-
-        // Login
-        loginBtn.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) {
-                showMessage('Por favor, preencha todos os campos.', 'error');
-                return;
-            }
-            
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
-            loginBtn.disabled = true;
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    showMessage('Login realizado com sucesso!', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'fichas.html';
-                    }, 1500);
-                })
-                .catch((error) => {
-                    let errorMessage = 'Erro ao fazer login.';
-                    
-                    if (error.code === 'auth/user-not-found') {
-                        errorMessage = 'Usuário não encontrado.';
-                    } else if (error.code === 'auth/wrong-password') {
-                        errorMessage = 'Senha incorreta.';
-                    } else if (error.code === 'auth/invalid-email') {
-                        errorMessage = 'E-mail inválido.';
-                    }
-                    
-                    showMessage(errorMessage, 'error');
-                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
-                    loginBtn.disabled = false;
-                });
-        });
-
-        // Registro
-        registerBtn.addEventListener('click', () => {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            
-            if (!email || !password || !confirmPassword) {
-                showMessage('Por favor, preencha todos os campos.', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showMessage('As senhas não coincidem.', 'error');
-                return;
-            }
-            
-            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando conta...';
-            registerBtn.disabled = true;
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Criar documento do usuário no Firestore na coleção 'usuarios'
-                    const user = userCredential.user;
-                    return db.collection('usuarios').doc(user.uid).set({
-                        email: user.email,
-                        ficha1: false,
-                        ficha2: false,
-                        ficha3: false,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                })
-                .then(() => {
-                    showMessage('Conta criada com sucesso!', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'fichas.html';
-                    }, 1500);
-                })
-                .catch((error) => {
-                    let errorMessage = 'Erro ao criar conta.';
-                    
-                    if (error.code === 'auth/email-already-in-use') {
-                        errorMessage = 'Este e-mail já está em uso.';
-                    } else if (error.code === 'auth/invalid-email') {
-                        errorMessage = 'E-mail inválido.';
-                    } else if (error.code === 'auth/weak-password') {
-                        errorMessage = 'A senha é muito fraca.';
-                    }
-                    
-                    showMessage(errorMessage, 'error');
-                    registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Criar Conta';
-                    registerBtn.disabled = false;
-                });
-        });
-
-        // Login como convidado
-        guestLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
-            loginBtn.disabled = true;
-            
-            auth.signInAnonymously()
-                .then((userCredential) => {
-                    showMessage('Login como convidado realizado!', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'fichas.html';
-                    }, 1500);
-                })
-                .catch((error) => {
-                    showMessage('Erro ao fazer login como convidado.', 'error');
-                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
-                    loginBtn.disabled = false;
-                });
-        });
-
-        // Verificar se usuário já está logado
-        auth.onAuthStateChanged((user) => {
-            if (user && !user.isAnonymous) {
-                // Atualizar último login
-                db.collection('usuarios').doc(user.uid).update({
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            }
-        });
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>

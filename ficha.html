@@ -1,83 +1,72 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ficha do Herói | Supernova RPG</title>
-  <link rel="stylesheet" href="css/ficha.css" />
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <meta charset="UTF-8">
+  <title>Ficha — Supernova RPG</title>
+  <link rel="stylesheet" href="./ficha.css">
 </head>
 <body>
-  <header>
-    <div class="logo">🌠 Supernova RPG</div>
-    <button id="logoutBtn">Sair</button>
-  </header>
+  <main class="painel">
+    <header>
+      <h1>Suas Fichas</h1>
+      <select id="seletor-ficha">
+        <option value="">-- Escolher personagem --</option>
+      </select>
+    </header>
 
-  <main class="container">
-    <div class="tabs">
-      <button class="tab active" data-tab="resumo">Resumo</button>
-      <button class="tab" data-tab="inventario">Inventário</button>
-      <button class="tab" data-tab="habilidades">Habilidades</button>
-    </div>
+    <section id="ficha-dados" class="hidden">
+      <div class="ficha-topo">
+        <h2 id="nome-heroi">Nome do Herói</h2>
+        <p class="sub"><span id="alter-ego"></span> — <span id="arquetipo"></span></p>
+      </div>
 
-    <!-- Aba: Resumo -->
-    <section id="resumo" class="tab-content active">
-      <div class="ficha-info glass">
-        <h2 id="nomeHeroi">Carregando...</h2>
-        <p id="conceitoHeroi"></p>
-        <div class="info-grid">
-          <div><strong>Origem:</strong> <span id="origemHeroi"></span></div>
-          <div><strong>Arquétipo:</strong> <span id="arquetipoHeroi"></span></div>
-          <div><strong>Nível:</strong> <span id="nivelHeroi">1</span></div>
+      <div class="barras">
+        <div class="barra">
+          <label>HP</label>
+          <input type="number" id="hp-atual" min="0">
+          <span>/</span>
+          <span id="hp-max"></span>
+        </div>
+        <div class="barra">
+          <label>PE</label>
+          <input type="number" id="pe-atual" min="0">
+          <span>/</span>
+          <span id="pe-max"></span>
         </div>
       </div>
 
-      <div class="atributos glass">
-        <h3>Atributos</h3>
-        <ul id="atributosLista"></ul>
+      <div class="status">
+        <p><strong>Defesa:</strong> <span id="defesa"></span></p>
+        <p><strong>Bloqueio:</strong> <span id="bloqueio"></span></p>
+        <p><strong>Esquiva:</strong> <span id="esquiva"></span></p>
       </div>
 
-      <div class="vida-esforco glass">
-        <h3>Status</h3>
-        <p><strong>Vida:</strong> <span id="vidaHeroi"></span></p>
-        <p><strong>Esforço:</strong> <span id="esforcoHeroi"></span></p>
+      <h3>Perícias</h3>
+      <div id="pericias"></div>
+
+      <div class="abas">
+        <button data-aba="habilidades" class="ativa">Habilidades</button>
+        <button data-aba="inventario">Inventário</button>
       </div>
 
-      <div class="pericias glass">
-        <h3>Perícias</h3>
-        <ul id="listaPericias"></ul>
-      </div>
-    </section>
-
-    <!-- Aba: Inventário -->
-    <section id="inventario" class="tab-content">
-      <div class="glass">
-        <h3>Inventário</h3>
-        <ul id="inventarioLista"></ul>
-        <div class="input-row">
-          <input type="text" id="novoItem" placeholder="Adicionar item..." />
-          <button id="addItem">+</button>
+      <div class="conteudo-aba" id="habilidades" data-ativa>
+        <div class="add-item">
+          <input id="nova-habilidade" placeholder="Nova habilidade...">
+          <button id="add-habilidade">Adicionar</button>
         </div>
+        <div id="lista-habilidades" class="cards"></div>
       </div>
-    </section>
 
-    <!-- Aba: Habilidades -->
-    <section id="habilidades" class="tab-content">
-      <div class="glass">
-        <h3>Habilidades</h3>
-        <ul id="habilidadesLista"></ul>
-        <div class="input-row">
-          <input type="text" id="novaHabilidade" placeholder="Adicionar habilidade..." />
-          <button id="addHabilidade">+</button>
+      <div class="conteudo-aba" id="inventario">
+        <div class="add-item">
+          <input id="novo-item" placeholder="Novo item...">
+          <button id="add-item">Adicionar</button>
         </div>
+        <div id="lista-inventario" class="cards"></div>
       </div>
     </section>
   </main>
 
-  <div id="mensagem" class="mensagem"></div>
-
-  <script src="js/ficha.js"></script>
+  <script type="module" src="./ficha.js"></script>
 </body>
 </html>
