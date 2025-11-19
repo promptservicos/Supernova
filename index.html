@@ -1,80 +1,87 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supernova RPG - Login</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <title>Survivor Shapes: Ultimate Update</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="logo">
-                <h1><i class="fas fa-star"></i> SUPERNOVA</h1>
-                <p>Entre no universo do seu herói</p>
+    <div id="main-layout">
+        <div id="game-wrapper">
+            <div id="damage-layer"></div>
+            <div id="countdown-overlay">3</div>
+            
+            <div id="game-container">
+                <div id="world"></div>
+                
+                <div id="boss-hud" style="display: none;">
+                    <span id="boss-name">QUADRADO COLOSSAL</span>
+                    <div class="boss-bar-container"><div id="boss-hp-bar"></div></div>
+                </div>
+
+                <div id="skill-hud"></div>
             </div>
+        </div>
 
-            <div class="tab-container">
-                <button id="login-tab" class="tab active">Login</button>
-                <button id="register-tab" class="tab">Registro</button>
+        <div id="sidebar">
+            <h2>Survivor Shapes</h2>
+            <div class="stat-group">
+                <div class="stat-label">Nível <span id="level">1</span></div>
+                <div class="bar-container"><div id="xp-bar" class="bar-fill xp-fill"></div></div>
             </div>
-
-            <!-- Login -->
-            <div id="login-form" class="form active">
-                <div class="form-group">
-                    <input type="email" id="login-email" placeholder="E-mail">
-                    <i class="fas fa-envelope icon"></i>
-                </div>
-
-                <div class="form-group">
-                    <input type="password" id="login-password" placeholder="Senha">
-                    <i class="fas fa-lock icon"></i>
-                    <span class="password-toggle" id="login-toggle-password">
-                        <i class="fas fa-eye"></i>
-                    </span>
-                </div>
-
-                <button id="login-btn" class="btn"><i class="fas fa-sign-in-alt"></i> Entrar</button>
-
-                <div class="divider"><span>ou</span></div>
-
-                <button id="guest-login" class="btn ghost"><i class="fas fa-user-secret"></i> Convidado</button>
+            <div class="stat-group">
+                <div class="stat-label">Vida <span id="hp-text">100/100</span></div>
+                <div class="bar-container"><div id="health-bar" class="bar-fill health-fill"></div></div>
             </div>
-
-            <!-- Registro -->
-            <div id="register-form" class="form">
-                <div class="form-group">
-                    <input type="email" id="register-email" placeholder="E-mail">
-                    <i class="fas fa-envelope icon"></i>
-                </div>
-
-                <div class="form-group">
-                    <input type="password" id="register-password" placeholder="Senha">
-                    <i class="fas fa-lock icon"></i>
-                    <span class="password-toggle" id="register-toggle-password">
-                        <i class="fas fa-eye"></i>
-                    </span>
-                </div>
-
-                <div class="form-group">
-                    <input type="password" id="confirm-password" placeholder="Confirmar senha">
-                    <i class="fas fa-lock icon"></i>
-                    <span class="password-toggle" id="confirm-toggle-password">
-                        <i class="fas fa-eye"></i>
-                    </span>
-                </div>
-
-                <button id="register-btn" class="btn"><i class="fas fa-user-plus"></i> Criar conta</button>
+            <div class="stat-box">
+                <div>Tempo: <span id="time" style="color:#FFF">0</span>s</div>
+                <div>Abates: <span id="kill-count" style="color:#F44336">0</span></div>
+                <div id="enemy-count" style="color:#aaa; font-size: 12px; margin-top:5px">Inimigos: 0</div>
             </div>
-
-            <div class="message" id="message"></div>
+            <div class="stat-box" id="weapon-display">Arma: Nenhuma</div>
+            <div style="margin-top: auto; font-size: 12px; color: #666; text-align: center;">[TAB] Pausar</div>
         </div>
     </div>
 
-    <script src="index.js"></script>
+    <div id="start-screen" class="screen-overlay">
+        <h1>Survivor Shapes</h1>
+        <p>Escolha sua Classe</p>
+        <div class="selection-grid">
+            <div class="class-card" id="btn-class-mage"><h3>MAGO</h3><p>Mestre dos elementos.</p></div>
+        </div>
+    </div>
+
+    <div id="weapon-select-screen" class="screen-overlay" style="display: none;">
+        <h2>Escolha sua Arma Inicial</h2>
+        <div class="selection-grid" id="weapon-selection-container"></div>
+    </div>
+    
+    <div id="level-up-screen" class="screen-overlay" style="display: none;">
+        <h2>Subiu de Nível!</h2>
+        <div id="upgrade-options-container" class="upgrade-grid"></div>
+    </div>
+
+    <div id="chest-screen" class="screen-overlay" style="display: none;">
+        <h2 id="chest-title">BAÚ!</h2>
+        <div id="chest-content"></div>
+        <button id="close-chest-button">Coletar</button>
+    </div>
+    
+    <div id="pause-screen" class="screen-overlay" style="display: none;">
+        <h2>JOGO PAUSADO</h2>
+        <div id="pause-stats" style="text-align: left; background: #333; padding: 20px; border-radius: 8px; min-width: 300px;"></div>
+        <button id="resume-button">Continuar</button>
+        <button id="quit-button" style="background-color: #d32f2f;">Reiniciar Jogo</button>
+    </div>
+
+    <div id="game-over" class="screen-overlay" style="display: none;">
+        <h2>Fim de Jogo!</h2>
+        <p>Tempo: <span id="final-time">0</span>s | Nível: <span id="final-level">1</span></p>
+        <p>Inimigos Derrotados: <span id="final-kills">0</span></p>
+        <button id="restart-button">Reiniciar Jogo</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
