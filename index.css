@@ -1,0 +1,151 @@
+/* Reset e Fonte */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+body {
+    background-color: #050505;
+    background-image: 
+        linear-gradient(rgba(76, 175, 80, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(76, 175, 80, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #eee;
+}
+
+.auth-container {
+    background: #1a1a1a;
+    width: 400px;
+    padding: 40px;
+    border-radius: 12px;
+    border: 2px solid #333;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de Borda Neon */
+.auth-container::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(90deg, #4CAF50, #00BCD4, #E040FB);
+}
+
+.logo-area h1 {
+    font-size: 32px;
+    margin-bottom: 5px;
+    background: -webkit-linear-gradient(#4CAF50, #8BC34A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.logo-area p { color: #888; font-size: 14px; margin-bottom: 30px; }
+
+/* Botões de Toggle */
+.toggle-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+}
+
+.toggle-btns button {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    flex: 1;
+}
+
+.toggle-btns button.active {
+    color: #eee;
+    border-bottom: 3px solid #4CAF50;
+}
+
+.toggle-btns button:hover { color: #fff; }
+
+/* Inputs */
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group .material-icons {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 10px 12px 40px;
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background: #2a2a2a;
+}
+
+/* Botões de Ação */
+.cta-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.cta-btn:hover { background: #43A047; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3); }
+
+.btn-register { background: #00BCD4; }
+.btn-register:hover { background: #00ACC1; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3); }
+
+/* Mensagens de Erro e Loading */
+.error-msg {
+    color: #F44336;
+    font-size: 13px;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+#loading {
+    margin-top: 20px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.spinner {
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survivor Shapes: Final Polish</title>
+    <link rel="stylesheet" href="jogo.css">
+</head>
+<body>
+    <div id="main-layout">
+        <div id="game-wrapper">
+            <canvas id="game-canvas"></canvas>
+            
+            <div id="damage-layer"></div>
+            <div id="countdown-overlay">3</div>
+            
+            <div id="game-container-ui">
+                <div id="boss-hud" style="display: none;">
+                    <span id="boss-name">QUADRADO COLOSSAL</span>
+                    <div class="boss-bar-container"><div id="boss-hp-bar"></div></div>
+                </div>
+                <div id="skill-hud"></div>
+            </div>
+        </div>
+
+        <div id="sidebar">
+            <h2>Survivor Shapes</h2>
+            <div class="stat-group">
+                <div class="stat-label">Nível <span id="level">1</span></div>
+                <div class="bar-container"><div id="xp-bar" class="bar-fill xp-fill"></div></div>
+            </div>
+            <div class="stat-group">
+                <div class="stat-label">Vida <span id="hp-text">100/100</span></div>
+                <div class="bar-container"><div id="health-bar" class="bar-fill health-fill"></div></div>
+            </div>
+            <div class="stat-group">
+                <div class="stat-label">Dash <span id="dash-status" style="font-size:10px; color:#aaa">PRONTO</span></div>
+                <div class="bar-container"><div id="dash-bar" class="bar-fill" style="background:#00BFFF; width:100%"></div></div>
+            </div>
+            <div class="stat-box">
+                <div>Tempo: <span id="time" style="color:#FFF">0</span>s</div>
+                <div>Abates: <span id="kill-count" style="color:#F44336">0</span></div>
+                <div style="font-size: 11px; color:#888; margin-top:5px">Coords: <span id="coords">0, 0</span></div>
+            </div>
+            <div class="stat-box" id="weapon-display">Arma: Nenhuma</div>
+            <div style="margin-top: auto; font-size: 12px; color: #666; text-align: center;">
+                [WASD] Mover | [ESPAÇO] Dash<br>[TAB] Pausar
+            </div>
+        </div>
+    </div>
+
+    <!-- MENUS -->
+    <div id="start-screen" class="screen-overlay">
+        <h1>Survivor Shapes</h1>
+        <p>Versão Modular</p>
+        <div class="selection-grid">
+            <div class="class-card" id="btn-class-mage"><h3>MAGO</h3><p>Mestre dos elementos.</p></div>
+        </div>
+    </div>
+
+    <div id="weapon-select-screen" class="screen-overlay" style="display: none;">
+        <h2>Escolha sua Arma Inicial</h2>
+        <div class="selection-grid" id="weapon-selection-container"></div>
+    </div>
+    
+    <div id="level-up-screen" class="screen-overlay" style="display: none;">
+        <h2>Subiu de Nível!</h2>
+        <div id="upgrade-options-container" class="upgrade-grid"></div>
+    </div>
+
+    <div id="chest-screen" class="screen-overlay" style="display: none;">
+        <h2 id="chest-title">BAÚ!</h2>
+        <div id="chest-content"></div>
+        <button id="close-chest-button">Coletar</button>
+    </div>
+    
+    <div id="pause-screen" class="screen-overlay" style="display: none;">
+        <h2>JOGO PAUSADO</h2>
+        <div id="pause-stats" style="text-align: left; background: #333; padding: 20px; border-radius: 8px; min-width: 300px;"></div>
+        <button id="resume-button">Continuar</button>
+        <button id="quit-button" style="background-color: #d32f2f;">Reiniciar Jogo</button>
+    </div>
+
+    <div id="game-over" class="screen-overlay" style="display: none;">
+        <h2>Fim de Jogo!</h2>
+        <p>Tempo: <span id="final-time">0</span>s | Nível: <span id="final-level">1</span></p>
+        <p>Inimigos Derrotados: <span id="final-kills">0</span></p>
+        <button id="restart-button">Reiniciar Jogo</button>
+    </div>
+
+    <!-- IMPORTANTE: type="module" permite usar imports dentro do JS -->
+    <script type="module" src="jogo.js"></script>
+</body>
+</html>

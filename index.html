@@ -3,85 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Survivor Shapes: Ultimate Update</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Survivor Shapes - Acesso</title>
+    <link rel="stylesheet" href="index.css">
+    <!-- Ícones (Google Fonts) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div id="main-layout">
-        <div id="game-wrapper">
-            <div id="damage-layer"></div>
-            <div id="countdown-overlay">3</div>
+
+    <div class="auth-container">
+        <div class="logo-area">
+            <h1>Survivor Shapes</h1>
+            <p>Domine a arena. Sobreviva ao caos.</p>
+        </div>
+
+        <!-- Container de Formulários -->
+        <div class="form-wrapper">
             
-            <div id="game-container">
-                <div id="world"></div>
-                
-                <div id="boss-hud" style="display: none;">
-                    <span id="boss-name">QUADRADO COLOSSAL</span>
-                    <div class="boss-bar-container"><div id="boss-hp-bar"></div></div>
+            <!-- Botões de Alternância -->
+            <div class="toggle-btns">
+                <button id="btn-show-login" class="active">Login</button>
+                <button id="btn-show-register">Registrar</button>
+            </div>
+
+            <!-- FORMULÁRIO DE LOGIN -->
+            <form id="login-form" class="auth-form">
+                <div class="input-group">
+                    <span class="material-icons">email</span>
+                    <input type="email" id="login-email" placeholder="Seu Email" required>
                 </div>
+                <div class="input-group">
+                    <span class="material-icons">lock</span>
+                    <input type="password" id="login-password" placeholder="Sua Senha" required>
+                </div>
+                <button type="submit" class="cta-btn">ENTRAR</button>
+                <p id="login-error" class="error-msg"></p>
+            </form>
 
-                <div id="skill-hud"></div>
+            <!-- FORMULÁRIO DE REGISTRO -->
+            <form id="register-form" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <span class="material-icons">person</span>
+                    <input type="text" id="reg-username" placeholder="Nome de Usuário" required>
+                </div>
+                <div class="input-group">
+                    <span class="material-icons">email</span>
+                    <input type="email" id="reg-email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <span class="material-icons">lock</span>
+                    <input type="password" id="reg-password" placeholder="Senha (min. 6 caracteres)" required minlength="6">
+                </div>
+                <button type="submit" class="cta-btn btn-register">CRIAR CONTA</button>
+                <p id="reg-error" class="error-msg"></p>
+            </form>
+
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div> Processando...
             </div>
         </div>
-
-        <div id="sidebar">
-            <h2>Survivor Shapes</h2>
-            <div class="stat-group">
-                <div class="stat-label">Nível <span id="level">1</span></div>
-                <div class="bar-container"><div id="xp-bar" class="bar-fill xp-fill"></div></div>
-            </div>
-            <div class="stat-group">
-                <div class="stat-label">Vida <span id="hp-text">100/100</span></div>
-                <div class="bar-container"><div id="health-bar" class="bar-fill health-fill"></div></div>
-            </div>
-            <div class="stat-box">
-                <div>Tempo: <span id="time" style="color:#FFF">0</span>s</div>
-                <div>Abates: <span id="kill-count" style="color:#F44336">0</span></div>
-                <div id="enemy-count" style="color:#aaa; font-size: 12px; margin-top:5px">Inimigos: 0</div>
-            </div>
-            <div class="stat-box" id="weapon-display">Arma: Nenhuma</div>
-            <div style="margin-top: auto; font-size: 12px; color: #666; text-align: center;">[TAB] Pausar</div>
-        </div>
     </div>
 
-    <div id="start-screen" class="screen-overlay">
-        <h1>Survivor Shapes</h1>
-        <p>Escolha sua Classe</p>
-        <div class="selection-grid">
-            <div class="class-card" id="btn-class-mage"><h3>MAGO</h3><p>Mestre dos elementos.</p></div>
-        </div>
-    </div>
-
-    <div id="weapon-select-screen" class="screen-overlay" style="display: none;">
-        <h2>Escolha sua Arma Inicial</h2>
-        <div class="selection-grid" id="weapon-selection-container"></div>
-    </div>
-    
-    <div id="level-up-screen" class="screen-overlay" style="display: none;">
-        <h2>Subiu de Nível!</h2>
-        <div id="upgrade-options-container" class="upgrade-grid"></div>
-    </div>
-
-    <div id="chest-screen" class="screen-overlay" style="display: none;">
-        <h2 id="chest-title">BAÚ!</h2>
-        <div id="chest-content"></div>
-        <button id="close-chest-button">Coletar</button>
-    </div>
-    
-    <div id="pause-screen" class="screen-overlay" style="display: none;">
-        <h2>JOGO PAUSADO</h2>
-        <div id="pause-stats" style="text-align: left; background: #333; padding: 20px; border-radius: 8px; min-width: 300px;"></div>
-        <button id="resume-button">Continuar</button>
-        <button id="quit-button" style="background-color: #d32f2f;">Reiniciar Jogo</button>
-    </div>
-
-    <div id="game-over" class="screen-overlay" style="display: none;">
-        <h2>Fim de Jogo!</h2>
-        <p>Tempo: <span id="final-time">0</span>s | Nível: <span id="final-level">1</span></p>
-        <p>Inimigos Derrotados: <span id="final-kills">0</span></p>
-        <button id="restart-button">Reiniciar Jogo</button>
-    </div>
-
-    <script src="script.js"></script>
+    <!-- Script como Módulo -->
+    <script type="module" src="index.js"></script>
 </body>
 </html>
